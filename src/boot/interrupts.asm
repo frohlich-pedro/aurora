@@ -1,6 +1,6 @@
 [bits 32]
-[extern isrHandler]
-[extern irqHandler]
+[extern isr_handler]
+[extern irq_handler]
 
 %macro ISR_ERRCODE 1
 global isr%1
@@ -37,7 +37,7 @@ isr_common_stub:
   mov gs, ax
   
   push esp
-  call isrHandler
+  call isr_handler
   add esp, 4
     
   pop ebx
@@ -62,7 +62,7 @@ irq_common_stub:
   mov gs, ax
   
   push esp
-  call irqHandler
+  call irq_handler
   add esp, 4
   
   pop ebx

@@ -1,14 +1,14 @@
-#include "drivers/kbDriver.h"
-#include "drivers/vgaDriver.h"
+#include "drivers/kb_driver.h"
+#include "drivers/vga_driver.h"
 
 void main(void) {
   __asm__ volatile ("cli");
 
-  kcls();
-  kprintf("Hello, World!\n", VGA_WHITE);
+  clear_screen();
+  print_kernel("Hello, World!\n", VGA_WHITE);
 
-  isrInstall();
-  initKeyboard();
+  isr_install();
+  init_keyboard();
 
   __asm__ volatile ("sti");
   while(1) __asm__ volatile ("hlt");
