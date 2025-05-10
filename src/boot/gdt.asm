@@ -1,28 +1,43 @@
 align 4
-gdt_start:
-  dq 0x0
+; 32-bit GDT (for protected mode)
+gdt32_start:
+    dq 0x0
+gdt32_code:
+    dw 0xffff
+    dw 0x0
+    db 0x0
+    db 10011010b
+    db 11001111b
+    db 0x0
+gdt32_data:
+    dw 0xffff
+    dw 0x0
+    db 0x0
+    db 10010010b
+    db 11001111b
+    db 0x0
+gdt32_end:
 
-gdt_code:
-  dw 0xffff
-  dw 0x0
-  db 0x0
-  db 10011010b
-  db 11001111b
-  db 0x0
+gdt32_descriptor:
+    dw gdt32_end - gdt32_start - 1
+    dd gdt32_start
 
-gdt_data:
-  dw 0xffff
-  dw 0x0
-  db 0x0
-  db 10010010b
-  db 11001111b
-  db 0x0
+CODE32_SEG equ gdt32_code - gdt32_start
+DATA32_SEG equ gdt32_data - gdt32_start
 
-gdt_end:
+; 64-bit GDT (for long mode)
+align 4
+gdt64_start:
+    dq 0x0
+gdt64_code:
+    dq 0x00209A0000000000  ; 64-bit code
+gdt64_data:
+    dq 0x0000920000000000  ; 64-bit data
+gdt64_end:
 
-gdt_descriptor:
-  dw gdt_end - gdt_start - 1
-  dd gdt_start
+gdt64_descriptor:
+    dw gdt64_end - gdt64_start - 1
+    dq gdt64_start
 
-CODE_SEG equ gdt_code - gdt_start
-DATA_SEG equ gdt_data - gdt_start
+CODE64_SEG equ gdt64_code - gdt64_start
+DATA64_SEG equ gdt64_data - gdt64_start
