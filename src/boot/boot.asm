@@ -26,7 +26,7 @@ enable_a20:
 
 load_kernel:
     mov bx, kernel_offset
-    mov dh, 16             ; Load 16 sectors (8KB)
+    mov dh, 16
     mov dl, [boot_drive]
     call disk_load
     ret
