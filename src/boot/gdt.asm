@@ -29,9 +29,9 @@ align 4
 gdt64_start:
     dq 0x0
 gdt64_code:
-    dq 0x00209A0000000000  ; 64-bit code
+    dq 0x00209A0000000000
 gdt64_data:
-    dq 0x0000920000000000  ; 64-bit data
+    dq 0x0000920000000000
 gdt64_end:
 
 gdt64_descriptor:
