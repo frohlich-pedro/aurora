@@ -2,11 +2,11 @@ ASM = nasm
 CC = gcc
 LD = ld
 DD = dd
-QEMU = qemu-system-i386
+QEMU = qemu-system-x86_64
 
-ASMFLAGS = -f elf32
+ASMFLAGS = -f elf64
 CFLAGS = -ffreestanding -nostdlib -m32 -I./src -Wall -Wextra
-LDFLAGS = -m elf_i386 -Ttext 0x1000 -Tdata 0x2000 --oformat binary
+LDFLAGS = -m elf_x86_64 -Ttext 0x1000 -Tdata 0x2000 --oformat binary
 
 OUT = out
 BOOT_SRC = src/boot/boot.asm
