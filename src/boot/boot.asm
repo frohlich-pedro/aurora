@@ -26,16 +26,10 @@ enable_a20:
 
 load_kernel:
     mov bx, kernel_offset
-    mov dh, 16
+    mov dh, 16             ; Load 16 sectors (8KB)
     mov dl, [boot_drive]
     call disk_load
     ret
-
-[bits 64]
-begin_64bit:
-    mov rax, 0x0A4B0A4F  ; "OK" in green on screen
-    mov [0xB8000], rax
-    hlt
 
 boot_drive db 0
 times 510 - ($ - $$) db 0

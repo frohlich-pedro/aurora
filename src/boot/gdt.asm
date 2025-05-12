@@ -1,5 +1,4 @@
 align 4
-; 32-bit GDT (for protected mode)
 gdt32_start:
     dq 0x0
 gdt32_code:

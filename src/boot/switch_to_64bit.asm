@@ -48,19 +48,19 @@ long_mode:
 
     mov rbp, 0x90000
     mov rsp, rbp
-    call begin_64bit
+    jmp kernel_offset      ; Jump to kernel at 0x1000
 
 [bits 32]
 setup_paging:
-    ; PML4 at 0x1000 (identity map first 2MB)
-    mov edi, 0x1000
+    ; PML4 at 0xA000 (avoid conflict with kernel at 0x1000)
+    mov edi, 0xA000
     mov cr3, edi
     xor eax, eax
-    mov ecx, 0x3000 / 4  ; Clear PML4, PDP, PD
+    mov ecx, 0x3000 / 4
     rep stosd
 
     ; Set up PML4 → PDP → PD
-    mov dword [0x1000], 0x2003  ; PML4[0] → PDP at 0x2000
-    mov dword [0x2000], 0x3003  ; PDP[0] → PD at 0x3000
-    mov dword [0x3000], 0x83    ; PD[0] → 2MB page (identity-mapped)
+    mov dword [0xA000], 0xB003  ; PML4[0] → PDP at 0xB000
+    mov dword [0xB000], 0xC003  ; PDP[0] → PD at 0xC000
+    mov dword [0xC000], 0x83    ; PD[0] → 2MB page (identity-mapped)
     ret
