@@ -10,12 +10,13 @@ void main(void) {
 
     const char* string = "Hello, World!";
 
+    i = 0;
     do {
         *(vga_buffer + i) = *(string + j);
         *(vga_buffer + (i + 1)) = 0x0f;
         i += 2;
         j += 1;
-    } while (*(string + i) != '\0');
+    } while (*(string + j) != '\0');
     
     while(1);
 }
