@@ -29,9 +29,9 @@
 void set_cursor(int offset);
 int get_cursor();
 void set_char(char character, unsigned char color, int offset);
+static int scroll_screen(int offset);
 void kprintf(const char *string, unsigned char color);
 void kcls();
-static int scroll_screen(int offset);
 
 static int get_offset(int row, int col) {
     return row * MAX_COLS + col;
