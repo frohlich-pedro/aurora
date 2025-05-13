@@ -5,7 +5,7 @@ DD = dd
 QEMU = qemu-system-x86_64
 
 ASMFLAGS = -f elf64
-CFLAGS = -ffreestanding -nostdlib -m32 -I./src -Wall -Wextra
+CFLAGS = -ffreestanding -nostdlib -m64 -I./src -Wall -Wextra
 LDFLAGS = -m elf_x86_64 -Ttext 0x1000 -Tdata 0x2000 --oformat binary
 
 OUT = out
@@ -54,6 +54,6 @@ clean:
 	rm -rf $(OUT)
 
 run: os.img
-	$(QEMU) -fda $(OUT)/os.img
+	$(QEMU) -fda $(OUT)/os.img -d int -no-reboot 
 
 .PHONY: all clean run
