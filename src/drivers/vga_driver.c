@@ -2,8 +2,6 @@
 #include "../include/io.h"
 #include "../include/memory.h"
 
-static int scroll_screen(int offset);
-
 void set_cursor(int offset) {
     byte_output(VGA_CTRL_REGISTER, VGA_OFFSET_HIGH);
     byte_output(VGA_DATA_REGISTER, (unsigned char)((offset >> 8) & 0xff));
@@ -60,13 +58,12 @@ void clear_screen() {
     set_cursor(0);
 }
 
-static int scroll_screen(int offset)
-{
+static int scroll_screen(int offset) {
     memory_copy((char *)VIDEO_ADDRESS, (char *)VIDEO_ADDRESS + MAX_COLS * 2, MAX_COLS * (MAX_ROWS - 1) * 2);
 
     int i;
     for (i = 0; i < MAX_COLS; i++) {
-        set_char(' ', VGA_WHITE, get_offset(MAX_ROWS - 1, col));
+        set_char(' ', VGA_WHITE, get_offset(MAX_ROWS - 1, i));
     }
 
     int new_row = MAX_ROWS - 1;

@@ -31,6 +31,7 @@ int get_cursor();
 void set_char(char character, unsigned char color, int offset);
 void print_kernel(const char *string, unsigned char color);
 void clear_screen();
+static int scroll_screen(int offset);
 
 static int get_offset(int row, int col) {
     return row * MAX_COLS + col;
