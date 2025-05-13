@@ -18,14 +18,14 @@ int get_cursor() {
 }
 
 void set_char(char character, unsigned char color, int offset) {
-    unsigned short *vga_buffer = (unsigned short *)VIDEO_ADDRESS;
+    unsigned short* vga_buffer = (unsigned short*)VIDEO_ADDRESS;
     *(vga_buffer + offset) = (color << 8) | character;
 }
 
-void kprintf(const char *string, unsigned char color) {
+void kprintf(const char* string, unsigned char color) {
     int offset = get_cursor();
+    
     int i = 0;
-
     while (*(string + i) != '\0') {
         if (*(string + i) == '\n') {
             offset = get_offset(get_row(offset) + 1, 0);
@@ -48,7 +48,7 @@ void kprintf(const char *string, unsigned char color) {
 
 void kcls() {
     unsigned int fill = (VGA_WHITE << 8 | ' ') * 0x00010001;
-    unsigned int *buffer = (unsigned int *)VIDEO_ADDRESS;
+    unsigned int* buffer = (unsigned int*)VIDEO_ADDRESS;
 
     int i;
     for (i = 0; i < (MAX_ROWS * MAX_COLS) / 2; i++) {
@@ -59,7 +59,7 @@ void kcls() {
 }
 
 static int scroll_screen(int offset) {
-    memory_copy((char *)VIDEO_ADDRESS, (char *)VIDEO_ADDRESS + MAX_COLS * 2, MAX_COLS * (MAX_ROWS - 1) * 2);
+    memory_copy((char*)VIDEO_ADDRESS, (char*)VIDEO_ADDRESS + MAX_COLS * 2, MAX_COLS * (MAX_ROWS - 1) * 2);
 
     int i;
     for (i = 0; i < MAX_COLS; i++) {
