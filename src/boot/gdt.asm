@@ -24,7 +24,6 @@ gdt32_descriptor:
 CODE32_SEG equ gdt32_code - gdt32_start
 DATA32_SEG equ gdt32_data - gdt32_start
 
-; 64-bit GDT (for long mode)
 align 4
 gdt64_start:
     dq 0x0
