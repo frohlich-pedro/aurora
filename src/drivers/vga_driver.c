@@ -1,4 +1,4 @@
-#include "vga_driver.h"
+#include ".vga_driver.h"
 #include "../include/io.h"
 #include "../include/memory.h"
 
@@ -22,7 +22,7 @@ void set_char(char character, unsigned char color, int offset) {
     *(vga_buffer + offset) = (color << 8) | character;
 }
 
-void print_kernel(const char *string, unsigned char color) {
+void kprintf(const char *string, unsigned char color) {
     int offset = get_cursor();
     int i = 0;
 
@@ -46,7 +46,7 @@ void print_kernel(const char *string, unsigned char color) {
     set_cursor(offset);
 }
 
-void clear_screen() {
+void kcls() {
     unsigned int fill = (VGA_WHITE << 8 | ' ') * 0x00010001;
     unsigned int *buffer = (unsigned int *)VIDEO_ADDRESS;
 
