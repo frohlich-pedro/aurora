@@ -11,7 +11,7 @@ LDFLAGS = -m elf_x86_64 -Ttext 0x1000 -Tdata 0x2000 --oformat binary
 OUT = out
 BOOT_SRC = src/boot/boot.asm
 ASM_SRC = src/boot/kernel_entry.asm src/boot/interrupts.asm
-C_SRC = src/kernel.c src/drivers/vga_driver.c src/drivers/kb_driver.c src/include/io.c src/include/memory.c
+C_SRC = src/kernel.c src/drivers/vga_driver.c src/include/io.c src/include/memory.c
 
 all: os.img
 
@@ -25,7 +25,7 @@ $(OUT)/boot.bin: $(BOOT_SRC)
 	cd src/boot && $(ASM) -f bin boot.asm -o ../../$(OUT)/boot.bin
 
 $(OUT)/kernel.bin: $(OUT)/kernel_entry.o $(OUT)/kernel.o $(OUT)/interrupts.o \
-                   $(OUT)/vga_driver.o $(OUT)/kb_driver.o $(OUT)/io.o $(OUT)/memory.o
+                   $(OUT)/vga_driver.o $(OUT)/io.o $(OUT)/memory.o
 	$(LD) $(LDFLAGS) -o $(OUT)/kernel.bin $^
 
 $(OUT)/kernel_entry.o: src/boot/kernel_entry.asm
@@ -39,9 +39,6 @@ $(OUT)/interrupts.o: src/boot/interrupts.asm
 	$(ASM) $(ASMFLAGS) $< -o $@
 
 $(OUT)/vga_driver.o: src/drivers/vga_driver.c src/drivers/vga_driver.h src/include/io.h src/include/memory.h
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(OUT)/kb_driver.o: src/drivers/kb_driver.c src/drivers/kb_driver.h src/drivers/vga_driver.h src/include/io.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OUT)/io.o: src/include/io.c src/include/io.h
