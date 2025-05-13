@@ -62,14 +62,10 @@ void clear_screen() {
 
 static int scroll_screen(int offset)
 {
-    memory_copy(
-        (char *)VIDEO_ADDRESS,
-        (char *)VIDEO_ADDRESS + MAX_COLS * 2,
-        MAX_COLS * (MAX_ROWS - 1) * 2
-    );
+    memory_copy((char *)VIDEO_ADDRESS, (char *)VIDEO_ADDRESS + MAX_COLS * 2, MAX_COLS * (MAX_ROWS - 1) * 2);
 
-    int col;
-    for (col = 0; col < MAX_COLS; col++) {
+    int i;
+    for (i = 0; i < MAX_COLS; i++) {
         set_char(' ', VGA_WHITE, get_offset(MAX_ROWS - 1, col));
     }
 
