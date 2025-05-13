@@ -22,7 +22,7 @@ protected_mode:
     or eax, 1 << 5
     mov cr4, eax
 
-    mov ecx, 0xC0000080
+    mov ecx, 0xc0000080
     rdmsr
     or eax, 1 << 8
     wrmsr
@@ -49,13 +49,13 @@ long_mode:
 
 [bits 32]
 setup_paging:
-    mov edi, 0xA000
+    mov edi, 0xa000
     mov cr3, edi
     xor eax, eax
     mov ecx, 0x3000 / 4
     rep stosd
 
-    mov dword [0xA000], 0xB003
-    mov dword [0xB000], 0xC003
-    mov dword [0xC000], 0x83
+    mov dword [0xa000], 0xb003
+    mov dword [0xb000], 0xc003
+    mov dword [0xc000], 0x83
     ret

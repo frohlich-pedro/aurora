@@ -29,7 +29,7 @@ align 4
 gdt64_start:
     dq 0x0
 gdt64_code:
-    dq 0x00209A0000000000
+    dq 0x00209a0000000000
 gdt64_data:
     dq 0x0000920000000000
 gdt64_end:

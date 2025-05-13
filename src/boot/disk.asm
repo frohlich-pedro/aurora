@@ -28,7 +28,7 @@ sectors_error:
 
 print_msg:
     pusha
-    mov ah, 0x0E
+    mov ah, 0x0e
 .loop:
     lodsb
     test al, al
