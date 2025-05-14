@@ -23,7 +23,7 @@ typedef struct {
   unsigned long base;
 } __attribute__((packed)) idt_ptr;
 
-extern struct idt_ptr idtp;
+extern idt_ptr idtp;
 
 #define KBD_DATA_PORT 0x60
 #define PIC1_COMMAND 0x20
@@ -46,6 +46,6 @@ void idt_set_gate(unsigned char num, unsigned long base);
 void idt_init();
 
 extern void keyboard_isr();
-void load_idt(struct idt_ptr *ptr);
+void load_idt(idt_ptr *ptr);
 
 #endif

@@ -27,9 +27,14 @@ void keyboard_buffer_put(char c) {
 }
 
 char keyboard_buffer_get() {
-  if (kbd_buffer_head == kbd_buffer_tail) return 0;
+  asm volatile ("cli");
+  if (kbd_buffer_head == kbd_buffer_tail) {
+    asm volatile ("sti");
+    return 0;
+  }
   char c = kbd_buffer[kbd_buffer_tail];
   kbd_buffer_tail = (kbd_buffer_tail + 1) % KBD_BUFFER_SIZE;
+  asm volatile ("sti");
   return c;
 }
 
@@ -41,7 +46,11 @@ static const char scan_code_to_ascii[] = {
 };
 
 void keyboard_interrupt_handler(void) {
+  if (!(byte_input(0x64) & 0x01)) return;
+    
   unsigned char scan_code = byte_input(KBD_DATA_PORT);
+  if (scan_code & 0x80) return;
+    
   if (scan_code < sizeof(scan_code_to_ascii)) {
     char ch = scan_code_to_ascii[scan_code];
     if (ch) keyboard_buffer_put(ch);

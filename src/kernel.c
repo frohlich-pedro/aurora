@@ -3,13 +3,15 @@
 
 void main(void) {
   kcls();
-  kprintf("Keyboard test - press keys:\n", VGA_WHITE);
+  kprintf("Hello, World!\n", VGA_WHITE);
   keyboard_install();
     
   while (1) {
+    asm volatile ("hlt");
     char c = keyboard_buffer_get();
     if (c) {
-      kprintf(c, VGA_WHITE);
+      char str[2] = {c, '\0'};
+      kprintf(str, VGA_WHITE);
     }
   }
 }

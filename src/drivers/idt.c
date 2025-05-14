@@ -4,8 +4,8 @@
 idt_gate idt[IDT_ENTRIES];
 idt_ptr idtp;
 
-void idt_init(void) {
-  idtp.limit = sizeof(struct idt_gate) * IDT_ENTRIES - 1;
+void idt_init() {
+  idtp.limit = sizeof(idt_gate) * IDT_ENTRIES - 1;
   idtp.base = (unsigned long)&idt;
     
   for (int i = 0; i < IDT_ENTRIES; i++) {
