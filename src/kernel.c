@@ -9,7 +9,7 @@ void main(void) {
   while (1) {
     char c = keyboard_buffer_get();
     if (c) {
-      kprintf("%c", c);
+      kprintf(c, VGA_WHITE);
     }
   }
 }
