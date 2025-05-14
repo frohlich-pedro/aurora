@@ -34,15 +34,15 @@ void kprintf(const char* string, unsigned char color);
 void kcls();
 
 static int get_offset(int row, int col) {
-    return row * MAX_COLS + col;
+  return row * MAX_COLS + col;
 }
 
 static int get_row(int offset) {
-    return offset / MAX_COLS;
+  return offset / MAX_COLS;
 }
 
 static int get_col(int offset) {
-    return offset % MAX_COLS;
+  return offset % MAX_COLS;
 }
 
 #endif
