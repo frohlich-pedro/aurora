@@ -5,9 +5,8 @@ void main(void) {
   kcls();
   kprintf("Hello, World!\n", VGA_WHITE);
   keyboard_install();
-    
+
   while (1) {
-    asm volatile ("hlt");
     char c = keyboard_buffer_get();
     if (c) {
       char str[2] = {c, '\0'};
