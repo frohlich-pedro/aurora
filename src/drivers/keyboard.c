@@ -10,6 +10,7 @@
 #define ENTER 0x1C
 
 static char key_buffer[256];
+static bool shift_pressed = false;
 
 #define SC_MAX 57
 
@@ -19,28 +20,49 @@ const char *sc_name[] = {"ERROR", "Esc", "1", "2", "3", "4", "5", "6",
                          "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", "`",
                          "LShift", "\\", "Z", "X", "C", "V", "B", "N", "M", ",", ".",
                          "/", "RShift", "Keypad *", "LAlt", "Spacebar"};
+
 const char sc_ascii[] = {'?', '?', '1', '2', '3', '4', '5', '6',
-                         '7', '8', '9', '0', '-', '=', '?', '?', 'Q', 'W', 'E', 'R', 'T', 'Y',
-                         'U', 'I', 'O', 'P', '[', ']', '?', '?', 'A', 'S', 'D', 'F', 'G',
-                         'H', 'J', 'K', 'L', ';', '\'', '`', '?', '\\', 'Z', 'X', 'C', 'V',
-                         'B', 'N', 'M', ',', '.', '/', '?', '?', '?', ' '};
+                         '7', '8', '9', '0', '-', '=', '?', '?', 'q', 'w', 'e', 'r', 't', 'y',
+                         'u', 'i', 'o', 'p', '[', ']', '?', '?', 'a', 's', 'd', 'f', 'g',
+                         'h', 'j', 'k', 'l', ';', '\'', '`', '?', '\\', 'z', 'x', 'c', 'v',
+                         'b', 'n', 'm', ',', '.', '/', '?', '?', '?', ' '};
+
+const char shifted_sc_ascii[] = {'?', '?', '!', '@', '#', '$', '%', '^',
+                         '&', '*', '(', ')', '_', '+', '?', '?', 'Q', 'W', 'E', 'R', 'T', 'Y',
+                         'U', 'I', 'O', 'P', '{', '}', '?', '?', 'A', 'S', 'D', 'F', 'G',
+                         'H', 'J', 'K', 'L', ':', '"', '~', '?', '|', 'Z', 'X', 'C', 'V',
+                         'B', 'N', 'M', '<', '>', '?', '?', '?', '?', ' '};
 
 static void keyboard_callback(registers_t *regs) {
   uint8_t scancode = port_byte_in(0x60);
-  if (scancode > SC_MAX) return;
-  if (scancode == BACKSPACE) {
-    if (backspace(key_buffer)) {
-      print_backspace();
+  bool is_break = scancode & 0x80;
+  uint8_t make_code = scancode & 0x7F;
+
+  if (is_break) {
+    if (make_code == 0x2A || make_code == 0x36) {
+      shift_pressed = false;
     }
-  } else if (scancode == ENTER) {
-    print_nl();
-    execute_command(key_buffer);
-    key_buffer[0] = '\0';
   } else {
-    char letter = sc_ascii[(int) scancode];
-    append(key_buffer, letter);
-    char str[2] = {letter, '\0'};
-    print_string(str);
+    if (make_code == 0x2A || make_code == 0x36) {
+      shift_pressed = true;
+    } else if (make_code == BACKSPACE) {
+      if (backspace(key_buffer)) {
+        print_backspace();
+      }
+    } else if (make_code == ENTER) {
+      print_nl();
+      execute_command(key_buffer);
+      key_buffer[0] = '\0';
+    } else {
+      if (make_code > SC_MAX) return;
+
+      char letter = shift_pressed ? shifted_sc_ascii[make_code] : sc_ascii[make_code];
+      if (letter != '?') {
+        append(key_buffer, letter);
+        char str[2] = {letter, '\0'};
+        print_string(str);
+      }
+    }
   }
 }
 
