@@ -31,21 +31,13 @@ void start_kernel() {
   init_dynamic_mem();
 
   int *ptr1 = alloc(5);
-  int *ptr2 = alloc(10);
-
   mem_free(ptr1);
-
-  int *ptr3 = alloc(2);
-
-  mem_free(ptr2);
-
-  mem_free(ptr3);
 
   print_string("> ");
 }
 
 void execute_command(char *input) {
-  if (compare_string(input, "EXIT") == 0) {
+  if (compare_string(input, "exit") == 0) {
     print_string("Stopping the CPU. Bye!\n");
     asm volatile("hlt");
   } else if (compare_string(input, "") == 0) {
