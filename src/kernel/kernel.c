@@ -7,14 +7,6 @@
 #include "util.h"
 #include "mem.h"
 
-void* alloc(int n) {
-  int *ptr = (int *) mem_alloc(n * sizeof(int));
-  if (ptr == NULL_POINTER) {
-    print_string("Memory not allocated.\n");
-  }
-  return ptr;
-}
-
 void start_kernel() {
   clear_screen();
   isr_install();
