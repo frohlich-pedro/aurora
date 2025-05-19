@@ -8,3 +8,4 @@ void print_dynamic_node_size();
 void print_dynamic_mem();
 void *mem_alloc(unsigned int size);
 void mem_free(void *p);
+void* alloc(int n);
