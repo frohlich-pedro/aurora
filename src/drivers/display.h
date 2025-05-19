@@ -8,7 +8,7 @@
 #define REG_SCREEN_CTRL 0x3d4
 #define REG_SCREEN_DATA 0x3d5
 
-void print_string(char *string);
+void print_string(const char* string);
 void print_nl();
 void clear_screen();
 int scroll_ln(int offset);
