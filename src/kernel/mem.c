@@ -132,3 +132,11 @@ void mem_free(void *p) {
   current_mem_node = merge_next_node_into_current(current_mem_node);
   merge_current_node_into_previous(current_mem_node);
 }
+
+void* alloc(int n) {
+  int *ptr = (int *) mem_alloc(n * sizeof(int));
+  if (ptr == NULL_POINTER) {
+    print_string("Memory not allocated.\n");
+  }
+  return ptr;
+}
