@@ -56,6 +56,7 @@ void print_dynamic_mem() {
     print_dynamic_mem_node(current);
     current = current->next;
   }
+
   print_string("]\n");
 }
 
@@ -78,12 +79,10 @@ void* find_best_mem_block(dynamic_mem_node_t* dynamic_mem, unsigned int size) {
 }
 
 void* mem_alloc(unsigned int size) {
-  dynamic_mem_node_t* best_mem_block =
-    (dynamic_mem_node_t*) find_best_mem_block(dynamic_mem_start, size);
+  dynamic_mem_node_t* best_mem_block = (dynamic_mem_node_t*) find_best_mem_block(dynamic_mem_start, size);
   if (best_mem_block != NULL_POINTER) {
     best_mem_block->size = best_mem_block->size - size - DYNAMIC_MEM_NODE_SIZE;
-    dynamic_mem_node_t* mem_node_allocate = (dynamic_mem_node_t*) (((unsigned char*) best_mem_block) +
-      DYNAMIC_MEM_NODE_SIZE + best_mem_block->size);
+    dynamic_mem_node_t* mem_node_allocate = (dynamic_mem_node_t*) (((unsigned char*) best_mem_block) + DYNAMIC_MEM_NODE_SIZE + best_mem_block->size);
     mem_node_allocate->size = size;
     mem_node_allocate->used = 1;
     mem_node_allocate->next = best_mem_block->next;

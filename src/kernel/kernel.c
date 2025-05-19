@@ -10,7 +10,7 @@ void start_kernel() {
   clear_screen();
   isr_install();
 
-  asm volatile("sti");
+  asm volatile ("sti");
 
   init_keyboard();
   init_dynamic_mem();
@@ -24,7 +24,7 @@ void start_kernel() {
 void execute_command(const char* input) {
   if (compare_string(input, "exit") == 0) {
     print_string("Stopping the CPU. Bye!\n");
-    asm volatile("hlt");
+    asm volatile ("hlt");
   } else if (compare_string(input, "") == 0) {
     print_string("\n> ");
   } else {
