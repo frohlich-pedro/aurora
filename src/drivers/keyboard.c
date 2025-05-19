@@ -1,4 +1,3 @@
-#include <stdbool.h>
 #include "keyboard.h"
 #include "ports.h"
 #include "../cpu/isr.h"
@@ -10,7 +9,7 @@
 #define ENTER 0x1C
 
 static char key_buffer[256];
-static bool shift_pressed = false;
+static unsigned char shift_pressed = 0;
 
 #define SC_MAX 57
 
@@ -34,17 +33,17 @@ const char shifted_sc_ascii[] = {'?', '?', '!', '@', '#', '$', '%', '^',
                          'B', 'N', 'M', '<', '>', '?', '?', '?', '?', ' '};
 
 static void keyboard_callback(registers_t *regs) {
-  uint8_t scancode = port_byte_in(0x60);
-  bool is_break = scancode & 0x80;
-  uint8_t make_code = scancode & 0x7F;
+  unsigned char scancode = port_byte_in(0x60);
+  unsigned char is_break = scancode & 0x80;
+  unsigned char make_code = scancode & 0x7F;
 
   if (is_break) {
     if (make_code == 0x2A || make_code == 0x36) {
-      shift_pressed = false;
+      shift_pressed = 0;
     }
   } else {
     if (make_code == 0x2A || make_code == 0x36) {
-      shift_pressed = true;
+      shift_pressed = 1;
     } else if (make_code == BACKSPACE) {
       if (backspace(key_buffer)) {
         print_backspace();
@@ -52,11 +51,11 @@ static void keyboard_callback(registers_t *regs) {
     } else if (make_code == ENTER) {
       print_nl();
       execute_command(key_buffer);
-      key_buffer[0] = '\0';
+      *(key_buffer) = '\0';
     } else {
       if (make_code > SC_MAX) return;
 
-      char letter = shift_pressed ? shifted_sc_ascii[make_code] : sc_ascii[make_code];
+      char letter = shift_pressed ? *(shifted_sc_ascii + make_code) : *(sc_ascii + make_code);
       if (letter != '?') {
         append(key_buffer, letter);
         char str[2] = {letter, '\0'};

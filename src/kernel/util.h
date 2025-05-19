@@ -1,14 +1,11 @@
 #pragma once
 
-#include <stdint.h>
-#include <stdbool.h>
+#define low_16(address) (unsigned short)((address) & 0xFFFF)
+#define high_16(address) (unsigned short)(((address) >> 16) & 0xFFFF)
 
-#define low_16(address) (uint16_t)((address) & 0xFFFF)
-#define high_16(address) (uint16_t)(((address) >> 16) & 0xFFFF)
-
-int string_length(char s[]);
-void reverse(char s[]);
-void int_to_string(int n, char str[]);
-bool backspace(char s[]);
-void append(char s[], char n);
-int compare_string(char s1[], char s2[]);
+int string_length(const char* s);
+int compare_string(const char* s1, const char* s2);
+void reverse(char* s);
+void int_to_string(int n, char* str);
+unsigned char backspace(char* s);
+void append(char* s, char n);

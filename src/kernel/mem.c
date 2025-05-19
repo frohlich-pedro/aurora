@@ -1,5 +1,3 @@
-#include <stdbool.h>
-#include <stdint.h>
 #include "mem.h"
 #include "../drivers/display.h"
 #include "util.h"
@@ -8,17 +6,17 @@
 #define DYNAMIC_MEM_NODE_SIZE sizeof(dynamic_mem_node_t)
 
 typedef struct dynamic_mem_node {
-  uint32_t size;
-  bool used;
+  unsigned int size;
+  unsigned char used;
   struct dynamic_mem_node *next;
   struct dynamic_mem_node *prev;
 } dynamic_mem_node_t;
 
-static uint8_t dynamic_mem_area[DYNAMIC_MEM_TOTAL_SIZE];
+static unsigned char dynamic_mem_area[DYNAMIC_MEM_TOTAL_SIZE];
 static dynamic_mem_node_t *dynamic_mem_start;
 
-void memory_copy(uint8_t *source, uint8_t *dest, uint32_t nbytes) {
-  int i;
+void memory_copy(unsigned char *source, unsigned char *dest, unsigned int nbytes) {
+  unsigned int i;
   for (i = 0; i < nbytes; i++) {
     *(dest + i) = *(source + i);
   }
@@ -61,9 +59,9 @@ void print_dynamic_mem() {
   print_string("]\n");
 }
 
-void *find_best_mem_block(dynamic_mem_node_t *dynamic_mem, size_t size) {
+void *find_best_mem_block(dynamic_mem_node_t *dynamic_mem, unsigned int size) {
   dynamic_mem_node_t *best_mem_block = (dynamic_mem_node_t *) NULL_POINTER;
-  uint32_t best_mem_block_size = DYNAMIC_MEM_TOTAL_SIZE + 1;
+  unsigned int best_mem_block_size = DYNAMIC_MEM_TOTAL_SIZE + 1;
   dynamic_mem_node_t *current_mem_block = dynamic_mem;
   while (current_mem_block) {
     if ((!current_mem_block->used) &&
@@ -77,22 +75,22 @@ void *find_best_mem_block(dynamic_mem_node_t *dynamic_mem, size_t size) {
   return best_mem_block;
 }
 
-void *mem_alloc(size_t size) {
+void *mem_alloc(unsigned int size) {
   dynamic_mem_node_t *best_mem_block =
     (dynamic_mem_node_t *) find_best_mem_block(dynamic_mem_start, size);
   if (best_mem_block != NULL_POINTER) {
     best_mem_block->size = best_mem_block->size - size - DYNAMIC_MEM_NODE_SIZE;
-    dynamic_mem_node_t *mem_node_allocate = (dynamic_mem_node_t *) (((uint8_t *) best_mem_block) +
+    dynamic_mem_node_t *mem_node_allocate = (dynamic_mem_node_t *) (((unsigned char *) best_mem_block) +
       DYNAMIC_MEM_NODE_SIZE + best_mem_block->size);
     mem_node_allocate->size = size;
-    mem_node_allocate->used = true;
+    mem_node_allocate->used = 1;
     mem_node_allocate->next = best_mem_block->next;
     mem_node_allocate->prev = best_mem_block;
     if (best_mem_block->next != NULL_POINTER) {
       best_mem_block->next->prev = mem_node_allocate;
     }
     best_mem_block->next = mem_node_allocate;
-    return (void *) ((uint8_t *) mem_node_allocate + DYNAMIC_MEM_NODE_SIZE);
+    return (void *) ((unsigned char *) mem_node_allocate + DYNAMIC_MEM_NODE_SIZE);
   }
   return NULL_POINTER;
 }
@@ -126,11 +124,11 @@ void mem_free(void *p) {
   if (p == NULL_POINTER) {
     return;
   }
-  dynamic_mem_node_t *current_mem_node = (dynamic_mem_node_t *) ((uint8_t *) p - DYNAMIC_MEM_NODE_SIZE);
+  dynamic_mem_node_t *current_mem_node = (dynamic_mem_node_t *) ((unsigned char *) p - DYNAMIC_MEM_NODE_SIZE);
   if (current_mem_node == NULL_POINTER) {
     return;
   }
-  current_mem_node->used = false;
+  current_mem_node->used = 0;
   current_mem_node = merge_next_node_into_current(current_mem_node);
   merge_current_node_into_previous(current_mem_node);
 }
