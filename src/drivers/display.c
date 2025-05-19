@@ -84,7 +84,7 @@ void clear_screen() {
 }
 
 void print_backspace() {
-  int newCursor = get_cursor() - 2;
-  set_char_at_video_memory(' ', newCursor);
-  set_cursor(newCursor);
+  int new_cursor = get_cursor() - 2;
+  set_char_at_video_memory(' ', new_cursor);
+  set_cursor(new_cursor);
 }
