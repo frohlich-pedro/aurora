@@ -51,7 +51,7 @@ int scroll_ln(int offset) {
   return offset - 2 * MAX_COLS;
 }
 
-void print_string(char *string) {
+void print_string(const char* string) {
   int offset = get_cursor();
   
   int i = 0;
