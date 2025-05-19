@@ -6,7 +6,7 @@ int string_length(const char* s) {
 
 void reverse(char* s) {
   int c, i, j;
-  for (i = 0, j = string_length(s)-1; i < j; i++, j--) {
+  for (i = 0, j = string_length(s) - 1; i < j; i++, j--) {
     c = *(s + i);
     *(s + i) = *(s + j);
     *(s + j) = c;
@@ -16,7 +16,7 @@ void reverse(char* s) {
 void int_to_string(int n, char* str) {
   int i, sign;
   if ((sign = n) < 0) n = ~n + 1;
-
+  
   i = 0;
   do {
     *(str + i++) = n % 10 + '0';
