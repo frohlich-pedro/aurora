@@ -1,6 +1,6 @@
 int string_length(const char* s) {
   int i = 0;
-  while (*(s + i) != '\0') ++i;
+  while (*(s + i)) ++i;
   return i;
 }
 
@@ -15,16 +15,13 @@ void reverse(char* s) {
 
 void int_to_string(int n, char* str) {
   int i, sign;
-  if ((sign = n) < 0) n = ~n + 1;
-  
+  if ((sign = n) < 0) n = -n;
   i = 0;
   do {
     *(str + i++) = n % 10 + '0';
   } while ((n /= 10) > 0);
-
   if (sign < 0) *(str + i++) = '-';
   *(str + i) = '\0';
-
   reverse(str);
 }
 
@@ -40,7 +37,6 @@ unsigned char backspace(char* s) {
     *(s + len - 1) = '\0';
     return 1;
   }
-  
   return 0;
 }
 
@@ -49,6 +45,13 @@ int compare_string(const char* s1, const char* s2) {
   for (i = 0; *(s1 + i) == *(s2 + i); i++) {
     if (*(s1 + i) == '\0') return 0;
   }
-
   return *(s1 + i) - *(s2 + i);
+}
+
+int compare_string_length(const char* s1, const char* s2, int len) {
+  int i;
+  for (i = 0; i < len && *(s1 + i) == *(s2 + i); i++) {
+    if (*(s1 + i) == '\0') return 0;
+  }
+  return (i == len) ? 0 : *(s1 + i) - *(s2 + i);
 }

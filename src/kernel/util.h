@@ -5,6 +5,7 @@
 
 int string_length(const char* s);
 int compare_string(const char* s1, const char* s2);
+int compare_string_length(const char* s1, const char* s2, int len);
 void reverse(char* s);
 void int_to_string(int n, char* str);
 unsigned char backspace(char* s);

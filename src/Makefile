@@ -2,12 +2,13 @@
 # $< = first dependency
 # $^ = all dependencies
 
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c)
-HEADERS = $(wildcard kernel/*.h  drivers/*.h cpu/*.h)
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c shell/*.c)
+HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h shell/*.h)
 OBJ_FILES = ${C_SOURCES:.c=.o cpu/interrupt.o}
 
 CC ?= x86_64-elf-gcc
 LD ?= x86_64-elf-ld
+CFLAGS = -g -m32 -ffreestanding -fno-pie -fno-stack-protector -I.
 
 all: run
 
@@ -31,7 +32,7 @@ debug: os-image.bin kernel.elf
 	i386-elf-gdb -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 %.o: %.c ${HEADERS}
-	$(CC) -g -m32 -ffreestanding -fno-pie -fno-stack-protector -c $< -o $@ # -g for debugging
+	$(CC) $(CFLAGS) -c $< -o $@
 
 %.o: %.asm
 	nasm $< -f elf -o $@
@@ -44,7 +45,4 @@ debug: os-image.bin kernel.elf
 
 clean:
 	$(RM) *.bin *.o *.dis *.elf
-	$(RM) kernel/*.o
-	$(RM) boot/*.o boot/*.bin
-	$(RM) drivers/*.o
-	$(RM) cpu/*.o
+	$(RM) kernel/*.o boot/*.o boot/*.bin drivers/*.o cpu/*.o shell/*.o
