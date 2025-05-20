@@ -27,6 +27,13 @@ void execute_command(const char* input) {
     asm volatile ("hlt");
   } else if (compare_string(input, "") == 0) {
     print_string("\n> ");
+  } else if (compare_string(input, "clear") == 0) {
+    clear_screen();
+    print_string("\n> ");
+  } else if (compare_string(input, "meminfo") == 0) {
+    print_dynamic_mem();
+    print_dynamic_node_size();
+    print_string("\n> ");
   } else {
     print_string("Unknown command: ");
     print_string(input);
