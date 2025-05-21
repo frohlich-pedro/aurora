@@ -5,7 +5,7 @@
 typedef struct {
   const char* name;
   void (*func)(const char*);
-} ShellCommand;
+} shell_command_t;
 
 void execute_command(const char* input);
 void print_shell_prompt(void);
