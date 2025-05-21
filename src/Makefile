@@ -2,7 +2,7 @@
 # $< = first dependency
 # $^ = all dependencies
 
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c shell/*.c)
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c shell/*.c shell/bin/*.c)
 HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h shell/*.h)
 OBJ_FILES = ${C_SOURCES:.c=.o cpu/interrupt.o}
 
@@ -45,4 +45,4 @@ debug: os-image.bin kernel.elf
 
 clean:
 	$(RM) *.bin *.o *.dis *.elf
-	$(RM) kernel/*.o boot/*.o boot/*.bin drivers/*.o cpu/*.o shell/*.o
+	$(RM) kernel/*.o boot/*.o boot/*.bin drivers/*.o cpu/*.o shell/*.o shell/bin/*.c
