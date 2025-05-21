@@ -6,7 +6,6 @@ Don't expect it to be the new Linux, since i'm a 17y boy who's alone in this pro
 > [!NOTE]
 > You need the following packages: qemu-system-i386, nasm, gcc, make
 
-Just enter src/ (where is located Makefile) then just:
 ```sh
 make clean && make all
 ```
