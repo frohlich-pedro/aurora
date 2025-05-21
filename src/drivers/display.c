@@ -4,7 +4,7 @@
 #include "../kernel/util.h"
 
 void set_cursor(int offset) {
-  offset /= 2;
+  offset >>= 1;
   port_byte_out(REG_SCREEN_CTRL, 14);
   port_byte_out(REG_SCREEN_DATA, (unsigned char)(offset >> 8));
   port_byte_out(REG_SCREEN_CTRL, 15);
@@ -16,15 +16,15 @@ int get_cursor() {
   int offset = port_byte_in(REG_SCREEN_DATA) << 8;
   port_byte_out(REG_SCREEN_CTRL, 15);
   offset += port_byte_in(REG_SCREEN_DATA);
-  return offset * 2;
+  return offset << 1;
 }
 
 int get_offset(int col, int row) {
-  return 2 * (row * MAX_COLS + col);
+  return (row * MAX_COLS + col) << 1;
 }
 
 int get_row_from_offset(int offset) {
-  return offset / (2 * MAX_COLS);
+  return offset / (MAX_COLS << 1);
 }
 
 int move_offset_to_new_line(int offset) {
@@ -48,7 +48,7 @@ int scroll_ln(int offset) {
     set_char_at_video_memory(' ', get_offset(col, MAX_ROWS - 1));
   }
   
-  return offset - 2 * MAX_COLS;
+  return offset - (MAX_COLS << 1);
 }
 
 void print_string(const char* string) {
@@ -84,7 +84,7 @@ void print_nl() {
 void clear_screen() {
   int screen_size = MAX_COLS * MAX_ROWS;
   for (int i = 0; i < screen_size; i++) {
-    set_char_at_video_memory(' ', i * 2);
+    set_char_at_video_memory(' ', i << 1);
   }
   
   set_cursor(get_offset(0, 0));
