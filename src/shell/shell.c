@@ -8,7 +8,6 @@ void print_shell_prompt(void) {
 }
 
 void shell_init(void) {
-  clear_screen();
   print_shell_prompt();
 }
 

@@ -5,7 +5,6 @@
 #include "../drivers/keyboard.h"
 #include "util.h"
 #include "mem.h"
-#include "../shell/shell.h"
 
 void start_kernel() {
   clear_screen();
