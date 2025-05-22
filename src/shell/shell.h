@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../drivers/display.h"
+#include "bin/commands.h"
 
 typedef struct {
   const char* name;

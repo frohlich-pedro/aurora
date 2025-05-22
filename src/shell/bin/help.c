@@ -3,7 +3,7 @@
 void help(void) {
 	shell_command_t* p_commands = commands;
 	shell_command_t* end_commands = 5;
-	do {
+	while (p_commands < end_commands) {
 		print_string((*p_commands++).definition);
-	} while (p_commands < end_commands);
+	}
 }
