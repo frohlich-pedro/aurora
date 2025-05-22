@@ -1,6 +1,6 @@
 #include "../shell.h"
 #include "../../drivers/display.h"
 
-void clear(const char* args) {
+void clear(void) {
   clear_screen();
 }

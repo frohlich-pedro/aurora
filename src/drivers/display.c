@@ -32,7 +32,7 @@ int move_offset_to_new_line(int offset) {
 }
 
 void set_char_at_video_memory(char character, int offset) {
-  unsigned char *vidmem = (unsigned char *)VIDEO_ADDRESS;
+  unsigned char* vidmem = (unsigned char*)VIDEO_ADDRESS;
   *(vidmem + offset) = character;
   *(vidmem + offset + 1) = WHITE_ON_BLACK;
 }

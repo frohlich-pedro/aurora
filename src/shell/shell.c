@@ -3,14 +3,6 @@
 #include "../kernel/mem.h"
 #include "bin/commands.h"
 
-static const shell_command_t commands[] = {
-  {"exit",    exit},
-  {"clear",   clear},
-  {"meminfo", meminfo},
-  {"echo",    echo},
-  {0, 0}
-};
-
 void print_shell_prompt(void) {
   print_string("<root@aurora:/># ");
 }
