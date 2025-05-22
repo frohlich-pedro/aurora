@@ -10,12 +10,12 @@ typedef struct {
 } shell_command_t;
 
 static const shell_command_t commands[] = {
+  {"help", help, "shows available commands"},
   {"exit", exit, "quit the kernel"},
   {"clear", clear, "clears screen"},
   {"meminfo", meminfo, "shows memory info"},
   {"echo", echo, "prints text to the screen"},
-  {"help", help, "helps the user"},
-  {0, 0}
+  {0, 0, 0}
 };
 
 void execute_command(const char* input);

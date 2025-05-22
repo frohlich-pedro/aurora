@@ -2,6 +2,7 @@
 #include "../../kernel/util.h"
 
 void echo(const char* args) {
+  asm volatile ("cli");
   if (compare_string(args, "") == 0) {
     print_string("\n");
     return;
@@ -25,4 +26,5 @@ void echo(const char* args) {
     
   print_string(args);
   print_string("\n");
+  asm volatile ("sti");
 }

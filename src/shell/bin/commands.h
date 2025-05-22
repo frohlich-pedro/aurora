@@ -1,7 +1,7 @@
 #pragma once
 
-void exit(void);
-void clear(void);
-void meminfo(void);
+void exit(const char* args);
+void clear(const char* args);
+void meminfo(const char* args);
 void echo(const char* args);
-void help(void);
+void help(const char* args);
