@@ -33,19 +33,22 @@ int move_offset_to_new_line(int offset) {
 
 void set_char_at_video_memory(char character, int offset) {
   unsigned char* vidmem = (unsigned char*)VIDEO_ADDRESS;
-  *(vidmem + offset) = character;
-  *(vidmem + offset + 1) = WHITE_ON_BLACK;
+  vidmem[offset] = character;
+  vidmem[offset + 1] = WHITE_ON_BLACK;
 }
 
 int scroll_ln(int offset) {
-  memory_copy(
-    (unsigned char*)(get_offset(0, 1) + VIDEO_ADDRESS),
-    (unsigned char*)(get_offset(0, 0) + VIDEO_ADDRESS),
-    MAX_COLS * (MAX_ROWS - 1) * 2
-  );
+  unsigned char* video_mem = (unsigned char*)VIDEO_ADDRESS;
+  unsigned char* first_line = video_mem + get_offset(0, 0);
+  unsigned char* second_line = video_mem + get_offset(0, 1);
   
-  for (int col = 0; col < MAX_COLS; col++) {
-    set_char_at_video_memory(' ', get_offset(col, MAX_ROWS - 1));
+  memory_copy(second_line, first_line, MAX_COLS * (MAX_ROWS - 1) * 2);
+  
+  unsigned char* last_line = video_mem + get_offset(0, MAX_ROWS - 1);
+  unsigned char* end_line = last_line + (MAX_COLS * 2);
+  while (last_line < end_line) {
+    *last_line++ = ' ';
+    *last_line++ = WHITE_ON_BLACK;
   }
   
   return offset - (MAX_COLS << 1);
@@ -54,20 +57,19 @@ int scroll_ln(int offset) {
 void print_string(const char* string) {
   int offset = get_cursor();
   
-  int i = 0;
-  while (*(string + i) != 0) {
+  while (*string) {
     if (offset >= MAX_ROWS * MAX_COLS * 2) {
       offset = scroll_ln(offset);
     }
     
-    if (*(string + i) == '\n') {
+    if (*string == '\n') {
       offset = move_offset_to_new_line(offset);
     } else {
-      set_char_at_video_memory(*(string + i), offset);
+      set_char_at_video_memory(*string, offset);
       offset += 2;
     }
     
-    i++;
+    string++;
   }
   
   set_cursor(offset);
@@ -82,9 +84,12 @@ void print_nl() {
 }
 
 void clear_screen() {
-  int screen_size = MAX_COLS * MAX_ROWS;
-  for (int i = 0; i < screen_size; i++) {
-    set_char_at_video_memory(' ', i << 1);
+  unsigned char* vidmem = (unsigned char*)VIDEO_ADDRESS;
+  unsigned char* end = vidmem + (MAX_COLS * MAX_ROWS * 2);
+  
+  while (vidmem < end) {
+    *vidmem++ = ' ';
+    *vidmem++ = WHITE_ON_BLACK;
   }
   
   set_cursor(get_offset(0, 0));

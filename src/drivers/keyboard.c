@@ -55,12 +55,12 @@ static void keyboard_callback(registers_t* regs) {
   } else if (make_code == ENTER) {
     print_nl();
     execute_command(key_buffer);
-    *key_buffer = '\0';
+    key_buffer[0] = '\0';
   } else if (make_code == 0x3A) {
     caps_lock = !caps_lock;
   } else if (make_code <= SC_MAX) {
     unsigned char uppercase = shift_pressed ^ caps_lock;
-    char letter = uppercase ? *(shifted_sc_ascii + make_code) : *(sc_ascii + make_code);
+    char letter = uppercase ? shifted_sc_ascii[make_code] : sc_ascii[make_code];
         
     if (letter != '?') {
       append(key_buffer, letter);

@@ -16,9 +16,8 @@ static unsigned char dynamic_mem_area[DYNAMIC_MEM_TOTAL_SIZE];
 static dynamic_mem_node_t* dynamic_mem_start;
 
 void memory_copy(unsigned char* source, unsigned char* dest, unsigned int nbytes) {
-  unsigned int i;
-  for (i = 0; i < nbytes; i++) {
-    *(dest + i) = *(source + i);
+  while (nbytes--) {
+    *dest++ = *source++;
   }
 }
 
@@ -56,33 +55,30 @@ void print_dynamic_mem() {
     print_dynamic_mem_node(current);
     current = current->next;
   }
-
   print_string("]\n");
 }
 
 void* find_best_mem_block(dynamic_mem_node_t* dynamic_mem, unsigned int size) {
-  dynamic_mem_node_t* best_mem_block = (dynamic_mem_node_t*) NULL_POINTER;
+  dynamic_mem_node_t* best_mem_block = NULL_POINTER;
   unsigned int best_mem_block_size = DYNAMIC_MEM_TOTAL_SIZE + 1;
-  dynamic_mem_node_t* current_mem_block = dynamic_mem;
-  while (current_mem_block) {
-    if ((!current_mem_block->used) &&
-        (current_mem_block->size >= (size + DYNAMIC_MEM_NODE_SIZE)) &&
-        (current_mem_block->size <= best_mem_block_size)) {
-      best_mem_block = current_mem_block;
-      best_mem_block_size = current_mem_block->size;
+  
+  for (dynamic_mem_node_t* current = dynamic_mem; current; current = current->next) {
+    if ((!current->used) &&
+        (current->size >= (size + DYNAMIC_MEM_NODE_SIZE)) &&
+        (current->size <= best_mem_block_size)) {
+      best_mem_block = current;
+      best_mem_block_size = current->size;
     }
-    
-    current_mem_block = current_mem_block->next;
   }
   
   return best_mem_block;
 }
 
 void* mem_alloc(unsigned int size) {
-  dynamic_mem_node_t* best_mem_block = (dynamic_mem_node_t*) find_best_mem_block(dynamic_mem_start, size);
+  dynamic_mem_node_t* best_mem_block = find_best_mem_block(dynamic_mem_start, size);
   if (best_mem_block != NULL_POINTER) {
     best_mem_block->size = best_mem_block->size - size - DYNAMIC_MEM_NODE_SIZE;
-    dynamic_mem_node_t* mem_node_allocate = (dynamic_mem_node_t*) (((unsigned char*) best_mem_block) + DYNAMIC_MEM_NODE_SIZE + best_mem_block->size);
+    dynamic_mem_node_t* mem_node_allocate = (dynamic_mem_node_t*) ((unsigned char*) best_mem_block + DYNAMIC_MEM_NODE_SIZE + best_mem_block->size);
     mem_node_allocate->size = size;
     mem_node_allocate->used = 1;
     mem_node_allocate->next = best_mem_block->next;
@@ -102,9 +98,8 @@ void* mem_alloc(unsigned int size) {
 void* merge_next_node_into_current(dynamic_mem_node_t* current_mem_node) {
   dynamic_mem_node_t* next_mem_node = current_mem_node->next;
   if (next_mem_node != NULL_POINTER && !next_mem_node->used) {
-    current_mem_node->size += current_mem_node->next->size;
-    current_mem_node->size += DYNAMIC_MEM_NODE_SIZE;
-    current_mem_node->next = current_mem_node->next->next;
+    current_mem_node->size += next_mem_node->size + DYNAMIC_MEM_NODE_SIZE;
+    current_mem_node->next = next_mem_node->next;
     
     if (current_mem_node->next != NULL_POINTER) {
       current_mem_node->next->prev = current_mem_node;
@@ -117,8 +112,7 @@ void* merge_next_node_into_current(dynamic_mem_node_t* current_mem_node) {
 void* merge_current_node_into_previous(dynamic_mem_node_t* current_mem_node) {
   dynamic_mem_node_t* prev_mem_node = current_mem_node->prev;
   if (prev_mem_node != NULL_POINTER && !prev_mem_node->used) {
-    prev_mem_node->size += current_mem_node->size;
-    prev_mem_node->size += DYNAMIC_MEM_NODE_SIZE;
+    prev_mem_node->size += current_mem_node->size + DYNAMIC_MEM_NODE_SIZE;
     prev_mem_node->next = current_mem_node->next;
     
     if (current_mem_node->next != NULL_POINTER) {

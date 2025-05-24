@@ -4,7 +4,7 @@
 #include "bin/commands.h"
 
 void print_shell_prompt(void) {
-  print_string("<root@aurora:/># ");
+  print_string("> ");
 }
 
 void shell_init(void) {
@@ -12,7 +12,7 @@ void shell_init(void) {
 }
 
 void execute_command(const char* input) {
-  if (compare_string(input, "") == 0) {
+  if (!*input) {
     print_string("\n");
     print_shell_prompt();
     return;
@@ -20,23 +20,22 @@ void execute_command(const char* input) {
 
   const char* first_space = input;
   while (*first_space && *first_space != ' ') first_space++;
+  
   int cmd_len = first_space - input;
-  int command_found = 0;
+  const shell_command_t* cmd = commands;
 
-  for (const shell_command_t* cmd = commands; cmd->name; cmd++) {
+  while (cmd->name) {
     if (compare_string_length(input, cmd->name, cmd_len) == 0) {
       const char* args = (*first_space) ? first_space + 1 : "";
       cmd->func(args);
-      command_found = 1;
-      break;
+      print_shell_prompt();
+      return;
     }
+    cmd++;
   }
 
-  if (!command_found) {
-    print_string("Unknown command: ");
-    print_string(input);
-    print_string("\n");
-  }
-
+  print_string("Unknown command: ");
+  print_string(input);
+  print_string("\n");
   print_shell_prompt();
 }
