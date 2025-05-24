@@ -22,7 +22,8 @@ void int_to_string(int n, char* str) {
   char* orig = str;
   int sign;
   
-  if ((sign = n) < 0) n = ~n + 1;
+  if ((sign = n) < 0) n = -n;
+  
   do {
     *str++ = n % 10 + '0';
   } while ((n /= 10) > 0);
@@ -49,7 +50,7 @@ unsigned char backspace(char* s) {
 }
 
 int compare_string(const char* s1, const char* s2) {
-  while (*s1 == *s2) {
+  while (*s1 && *s1 == *s2) {
     s1++;
     s2++;
   }
@@ -57,7 +58,7 @@ int compare_string(const char* s1, const char* s2) {
 }
 
 int compare_string_length(const char* s1, const char* s2, int len) {
-  while (len-- && *s1 == *s2) {
+  while (len-- && *s1 && *s1 == *s2) {
     s1++;
     s2++;
   }
