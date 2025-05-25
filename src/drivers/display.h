@@ -9,7 +9,7 @@
 #define REG_SCREEN_DATA 0x3d5
 
 void print_string(const char* string);
-void print_nl();
-void clear_screen();
-int scroll_ln(int offset);
-void print_backspace();
+void print_nl(void);
+void clear_screen(void);
+void print_backspace(void);
+int get_cursor(void);

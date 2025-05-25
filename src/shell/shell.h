@@ -15,6 +15,8 @@ static const shell_command_t commands[] = {
   {"clear", clear, "clears screen"},
   {"meminfo", meminfo, "shows memory info"},
   {"echo", echo, "prints text to the screen"},
+  {"time", time, "shows current time (HH:MM:SS)"},
+  {"date", date, "shows current date (DD/MM/YYYY)"},
   {0, 0, 0}
 };
 

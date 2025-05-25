@@ -1,3 +1,6 @@
+#include "util.h"
+#include "../drivers/display.h"
+
 int string_length(const char* s) {
   const char* p = s;
   while (*p) ++p;
@@ -63,4 +66,39 @@ int compare_string_length(const char* s1, const char* s2, int len) {
     s2++;
   }
   return (len == -1) ? 0 : *s1 - *s2;
+}
+
+void strcpy(char* dest, const char* src) {
+    while (*src) {
+        *dest++ = *src++;
+    }
+    *dest = '\0';
+}
+
+void strcat(char* dest, const char* src) {
+    while (*dest) dest++;
+    strcpy(dest, src);
+}
+
+int atoi(const char* str) {
+  int result = 0;
+  int sign = 1;
+  
+  if (*str == '-') {
+    sign = -1;
+    str++;
+  }
+  
+  while (*str >= '0' && *str <= '9') {
+    result = result * 10 + (*str - '0');
+    str++;
+  }
+  
+  return sign * result;
+}
+
+void print_int(int n) {
+  char str[16];
+  int_to_string(n, str);
+  print_string(str);
 }

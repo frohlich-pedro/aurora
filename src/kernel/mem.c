@@ -8,8 +8,8 @@
 typedef struct dynamic_mem_node {
   unsigned int size;
   unsigned char used;
-  struct dynamic_mem_node *next;
-  struct dynamic_mem_node *prev;
+  struct dynamic_mem_node* next;
+  struct dynamic_mem_node* prev;
 } dynamic_mem_node_t;
 
 static unsigned char dynamic_mem_area[DYNAMIC_MEM_TOTAL_SIZE];
@@ -22,7 +22,7 @@ void memory_copy(unsigned char* source, unsigned char* dest, unsigned int nbytes
 }
 
 void init_dynamic_mem() {
-  dynamic_mem_start = (dynamic_mem_node_t *) dynamic_mem_area;
+  dynamic_mem_start = (dynamic_mem_node_t*) dynamic_mem_area;
   dynamic_mem_start->size = DYNAMIC_MEM_TOTAL_SIZE - DYNAMIC_MEM_NODE_SIZE;
   dynamic_mem_start->next = NULL_POINTER;
   dynamic_mem_start->prev = NULL_POINTER;
@@ -89,7 +89,7 @@ void* mem_alloc(unsigned int size) {
     }
     best_mem_block->next = mem_node_allocate;
     
-    return (void*) ((unsigned char *) mem_node_allocate + DYNAMIC_MEM_NODE_SIZE);
+    return (void*) ((unsigned char*) mem_node_allocate + DYNAMIC_MEM_NODE_SIZE);
   }
   
   return NULL_POINTER;
