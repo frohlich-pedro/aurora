@@ -7,5 +7,9 @@ Don't expect it to be the new Linux, since i'm a 17y boy who's alone in this pro
 > You need the following packages: qemu-system-i386, nasm, gcc, make
 
 ```sh
-make clean && make all
+# Build and run kernel
+make all
+
+# clean built files
+make clean
 ```
