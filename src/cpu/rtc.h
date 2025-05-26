@@ -39,5 +39,6 @@ unsigned char is_leap_year(unsigned char year);
 unsigned char days_in_month(unsigned char month, unsigned char year);
 unsigned char day_of_week(unsigned char day, unsigned char month, unsigned short year);
 unsigned char rtc_calculate_last_sunday(unsigned char month, unsigned char year);
-unsigned char rtc_calculate_nth_weekday(unsigned char month, unsigned char year, unsigned char n, unsigned char weekday);
+unsigned char rtc_calculate_nth_weekday(unsigned char month, unsigned char year, 
+                                       unsigned char n, unsigned char weekday);
 void rtc_adjust_timezone(rtc_date_t* date, unsigned char offset);

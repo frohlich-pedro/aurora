@@ -1,6 +1,7 @@
 #include "../../cpu/rtc.h"
 #include "../../drivers/display.h"
 #include "../../kernel/util.h"
+#include "commands.h"
 
 void date(const char* args) {
   (void)args;
