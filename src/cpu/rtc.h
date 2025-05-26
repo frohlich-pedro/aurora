@@ -27,18 +27,16 @@ typedef struct {
   unsigned char is_24hour;
 } rtc_date_t;
 
-unsigned char rtc_read_register(unsigned char reg);
-void rtc_write_register(unsigned char reg, unsigned char value);
-unsigned char rtc_is_updating();
+unsigned char rtc_read_reg(unsigned char reg);
+void rtc_write(unsigned char reg, unsigned char value);
+unsigned char rtc_updating();
 void rtc_read_date(rtc_date_t* date);
 void rtc_read_time(rtc_date_t* date);
-void rtc_read_full(rtc_date_t* date);
-unsigned char bcd_to_bin(unsigned char bcd);
-unsigned char bin_to_bcd(unsigned char bin);
-unsigned char is_leap_year(unsigned char year);
-unsigned char days_in_month(unsigned char month, unsigned char year);
-unsigned char day_of_week(unsigned char day, unsigned char month, unsigned short year);
-unsigned char rtc_calculate_last_sunday(unsigned char month, unsigned char year);
-unsigned char rtc_calculate_nth_weekday(unsigned char month, unsigned char year, 
-                                       unsigned char n, unsigned char weekday);
-void rtc_adjust_timezone(rtc_date_t* date, unsigned char offset);
+unsigned char bcd2bin(unsigned char bcd);
+unsigned char bin2bcd(unsigned char bin);
+unsigned char is_leap(unsigned char year);
+unsigned char month_days(unsigned char month, unsigned char year);
+unsigned char get_weekday(unsigned char day, unsigned char month, unsigned short year);
+unsigned char last_sunday(unsigned char month, unsigned char year);
+unsigned char nth_weekday(unsigned char month, unsigned char year, unsigned char n, unsigned char weekday);
+void rtc_adjust_tz(rtc_date_t* date, unsigned char offset);

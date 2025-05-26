@@ -1,13 +1,12 @@
 #include "../../cpu/rtc.h"
 #include "../../drivers/display.h"
 #include "../../kernel/util.h"
-#include "commands.h"
 
 void time(const char* args) {
   (void)args;
   
   rtc_date_t date;
-  rtc_read_full(&date);
+  rtc_read_date(&date);
   
   char time_str[9];
   char *p = time_str;
