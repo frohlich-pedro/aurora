@@ -1,12 +1,4 @@
-#include "../cpu/idt.h"
-#include "../cpu/isr.h"
-#include "../cpu/timer.h"
 #include "../drivers/display.h"
-#include "../drivers/keyboard.h"
-#include "util.h"
-#include "mem.h"
-#include "../shell/shell.h"
-
 
 void print_banner() {
   print_string("  --  Welcome to Aurora  --  \n\n");
