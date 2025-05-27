@@ -21,8 +21,6 @@ void start_kernel() {
   mem_free(ptr);
 
   print_banner();
-  
   print_string("Enter \'help\' to see command list.\n\n");
-  
   shell_init();
 }

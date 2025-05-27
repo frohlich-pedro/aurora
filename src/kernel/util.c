@@ -25,7 +25,7 @@ void int_to_string(int n, char* str) {
   char* orig = str;
   int sign;
   
-  if ((sign = n) < 0) n = -n;
+  if ((sign = n) < 0) n = ~n + 1;
   
   do {
     *str++ = n % 10 + '0';
