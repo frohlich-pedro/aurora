@@ -12,13 +12,13 @@ void reverse(char* s) {
   char* end = s + string_length(s) - 1;
   char c;
   
-  while (start < end) {
+  do {
     c = *start;
     *start = *end;
     *end = c;
     start++;
     end--;
-  }
+  } while (start < end);
 }
 
 void int_to_string(int n, char* str) {
@@ -61,23 +61,23 @@ int compare_string(const char* s1, const char* s2) {
 }
 
 int compare_string_length(const char* s1, const char* s2, int len) {
-  while (len-- && *s1 && *s1 == *s2) {
+  do {
     s1++;
     s2++;
-  }
+  } while (len-- && *s1 && *s1 == *s2);
   return (len == -1) ? 0 : *s1 - *s2;
 }
 
 void strcpy(char* dest, const char* src) {
-    while (*src) {
-        *dest++ = *src++;
-    }
-    *dest = '\0';
+  do {
+    *dest++ = *src++;
+  } while (*src);
+  *dest = '\0';
 }
 
 void strcat(char* dest, const char* src) {
-    while (*dest) dest++;
-    strcpy(dest, src);
+  while (*dest) dest++;
+  strcpy(dest, src);
 }
 
 int atoi(const char* str) {

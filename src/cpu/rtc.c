@@ -59,7 +59,7 @@ unsigned char is_leap(unsigned char year) {
 unsigned char month_days(unsigned char month, unsigned char year) {
   static const unsigned char days[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
   if (month == 2 && is_leap(year)) return 29;
-  return days[month - 1];
+  return *(days + month - 1);
 }
 
 unsigned char get_weekday(unsigned char day, unsigned char month, unsigned short year) {
@@ -71,7 +71,6 @@ unsigned char get_weekday(unsigned char day, unsigned char month, unsigned short
   unsigned char m = month;
   unsigned char k = year % 100;
   unsigned char j = year / 100;
-  
   unsigned char h = (q + (13 * (m + 1) / 5) + k + (k / 4) + (j / 4) + 5 * j) % 7;
   
   return (h + 6) % 7;

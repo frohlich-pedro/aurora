@@ -15,5 +15,5 @@ void set_idt_gate(int n, unsigned int handler) {
 void load_idt() {
   idt_reg.base = (unsigned int)idt;
   idt_reg.limit = IDT_ENTRIES * sizeof(idt_gate_t) - 1;
-  asm volatile("lidt (%0)" : : "r" (&idt_reg));
+  asm volatile ("lidt (%0)" : : "r" (&idt_reg));
 }

@@ -33,8 +33,8 @@ int move_offset_to_new_line(int offset) {
 
 void set_char_at_video_memory(char character, int offset) {
   unsigned char* vidmem = (unsigned char*)VIDEO_ADDRESS;
-  vidmem[offset] = character;
-  vidmem[offset + 1] = WHITE_ON_BLACK;
+  *(vidmem + offset) = character;
+  *(vidmem + offset + 1) = WHITE_ON_BLACK;
 }
 
 int scroll_ln(int offset) {
@@ -57,7 +57,7 @@ int scroll_ln(int offset) {
 void print_string(const char* string) {
   int offset = get_cursor();
   
-  while (*string) {
+  do {
     if (offset >= MAX_ROWS * MAX_COLS * 2) {
       offset = scroll_ln(offset);
     }
@@ -70,7 +70,7 @@ void print_string(const char* string) {
     }
     
     string++;
-  }
+  } while (*string);
   
   set_cursor(offset);
 }
@@ -87,10 +87,10 @@ void clear_screen() {
   unsigned char* vidmem = (unsigned char*)VIDEO_ADDRESS;
   unsigned char* end = vidmem + (MAX_COLS * MAX_ROWS * 2);
   
-  while (vidmem < end) {
+  do {
     *vidmem++ = ' ';
     *vidmem++ = WHITE_ON_BLACK;
-  }
+  } while (vidmem < end);
   
   set_cursor(get_offset(0, 0));
 }
