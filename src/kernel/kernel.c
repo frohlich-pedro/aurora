@@ -7,10 +7,13 @@
 #include "mem.h"
 #include "../shell/shell.h"
 #include "kernel_banner.h"
+#include "../drivers/sound.h"
 
 void start_kernel() {
   clear_screen();
   isr_install();
+
+  init_timer(1000);
 
   asm volatile ("sti");
 

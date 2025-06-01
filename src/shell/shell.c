@@ -3,35 +3,48 @@
 #include "../kernel/mem.h"
 #include "bin/commands.h"
 
-void print_shell_prompt(void) {
+void print_shell_prompt() {
   print_string("> ");
 }
 
-void shell_init(void) {
+void shell_init() {
   print_shell_prompt();
 }
 
 void execute_command(const char* input) {
+  while (*input == ' ') input++;
+  
   if (!*input) {
     print_string("\n");
     print_shell_prompt();
     return;
   }
 
-  const char* first_space = input;
-  while (*first_space && *first_space != ' ') first_space++;
+  char cmd_buffer[256];
+  strcpy(cmd_buffer, input);
   
-  int cmd_len = first_space - input;
-  const shell_command_t* cmd = commands;
+  char* cmd = cmd_buffer;
+  char* args = cmd_buffer;
+  
+  while (*args && *args != ' ') args++;
+  
+  if (*args) {
+    *args = '\0';
+    args++;
+    
+    while (*args == ' ') args++;
+  } else {
+    args = "";
+  }
 
-  while (cmd->name) {
-    if (compare_string_length(input, cmd->name, cmd_len) == 0) {
-      const char* args = (*first_space) ? first_space + 1 : "";
-      cmd->func(args);
+  const shell_command_t* current_cmd = commands;
+  while (current_cmd->name) {
+    if (compare_string(cmd, current_cmd->name) == 0) {
+      current_cmd->func(args);
       print_shell_prompt();
       return;
     }
-    cmd++;
+    current_cmd++;
   }
 
   print_string("Unknown command: ");

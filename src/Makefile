@@ -8,7 +8,7 @@ OBJ_FILES = ${C_SOURCES:.c=.o cpu/interrupt.o}
 
 CC ?= x86_64-elf-gcc
 LD ?= x86_64-elf-ld
-CFLAGS = -g -m32 -ffreestanding -fno-pie -fno-stack-protector -I.
+CFLAGS = -O3 -g -m32 -ffreestanding -fno-pie -fno-stack-protector -I.
 
 all: run
 
@@ -19,7 +19,7 @@ os-image.bin: boot/mbr.bin kernel.bin
 	cat $^ > $@
 
 run: os-image.bin
-	qemu-system-i386 -fda $<
+	qemu-system-i386 -fda $< -audiodev pa,id=speaker -machine pcspk-audiodev=speaker
 
 echo: os-image.bin
 	xxd $<
@@ -28,7 +28,7 @@ kernel.elf: boot/kernel_entry.o ${OBJ_FILES}
 	$(LD) -m elf_i386 -o $@ -Ttext 0x1000 $^
 
 debug: os-image.bin kernel.elf
-	qemu-system-i386 -s -S -fda os-image.bin -d guest_errors,int &
+	qemu-system-i386 -s -S -fda os-image.bin -audiodev pa,id=speaker -machine pcspk-audiodev=speaker -d guest_errors,int &
 	i386-elf-gdb -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 %.o: %.c ${HEADERS}

@@ -1,6 +1,5 @@
 #include "timer.h"
 #include "isr.h"
-#include "../drivers/display.h"
 #include "../drivers/ports.h"
 #include "../kernel/util.h"
 
@@ -8,11 +7,6 @@ unsigned int tick = 0;
 
 static void timer_callback(registers_t* regs) {
   tick++;
-  char tick_str[16];
-  int_to_string(tick, tick_str);
-  print_string("Tick: ");
-  print_string(tick_str);
-  print_nl();
 }
 
 void init_timer(unsigned int freq) {
@@ -21,4 +15,12 @@ void init_timer(unsigned int freq) {
   port_byte_out(0x43, 0x36);
   port_byte_out(0x40, divisor & 0xFF);
   port_byte_out(0x40, (divisor >> 8) & 0xFF);
+}
+
+void sleep(unsigned int milliseconds) {
+    unsigned int start_tick = tick;
+    unsigned int ticks_to_wait = milliseconds;
+    while (tick - start_tick < ticks_to_wait) {
+        asm volatile("sti\nhlt\ncli");
+    }
 }

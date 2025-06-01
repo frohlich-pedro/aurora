@@ -102,3 +102,13 @@ void print_int(int n) {
   int_to_string(n, str);
   print_string(str);
 }
+
+void strncpy(char* dest, const char* src, int n) {
+    while (n-- && (*dest++ = *src++)) {
+        // Copy characters until n reaches 0 or null terminator is found
+    }
+    // Ensure null termination if we stopped because of n
+    if (n <= 0) {
+        *(dest - 1) = '\0';
+    }
+}

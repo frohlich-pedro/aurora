@@ -16,9 +16,11 @@ static const shell_command_t commands[] = {
   {"meminfo", meminfo, "shows memory info"},
   {"time", time, "shows current time (HH:MM:SS)"},
   {"date", date, "shows current date (DD/MM/YYYY)"},
+  {"beep", cmd_beep, "plays a beep - usage: beep [freq] [duration]"},
+  {"echo", echo, "prints arguments to screen - usage: echo [text]"},
   {0, 0, 0}
 };
 
 void execute_command(const char* input);
-void print_shell_prompt(void);
-void shell_init(void);
+void print_shell_prompt();
+void shell_init();
