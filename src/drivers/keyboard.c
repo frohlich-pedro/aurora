@@ -3,6 +3,7 @@
 #include "../cpu/isr.h"
 #include "display.h"
 #include "../kernel/util.h"
+#include "../shell/shell.h"
 
 #define BACKSPACE 0x0E
 #define ENTER 0x1C
