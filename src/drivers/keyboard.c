@@ -12,7 +12,7 @@
 #define RSHIFT_BREAK (RSHIFT_MAKE | 0x80)
 
 static char key_buffer[256];
-static unsigned int key_buffer_pos = 0;  // Add this to track buffer position
+static unsigned int key_buffer_pos = 0;
 static unsigned char shift_pressed = 0;
 static unsigned char caps_lock = 0;
 
@@ -38,50 +38,46 @@ const char shifted_sc_ascii[] = {'?', '?', '!', '@', '#', '$', '%', '^',
                                'B', 'N', 'M', '<', '>', '?', '?', '?', '?', ' '};
 
 static void keyboard_callback(registers_t* regs) {
-    unsigned char scancode = port_byte_in(0x60);
-    unsigned char is_break = scancode & 0x80;
-    unsigned char make_code = scancode & 0x7F;
+  unsigned char scancode = port_byte_in(0x60);
+  unsigned char is_break = scancode & 0x80;
+  unsigned char make_code = scancode & 0x7F;
 
-    if (make_code == LSHIFT_MAKE || make_code == RSHIFT_MAKE) {
-        shift_pressed = !is_break;
-        return;
+  if (make_code == LSHIFT_MAKE || make_code == RSHIFT_MAKE) {
+    shift_pressed = !is_break;
+    return;
+  }
+
+  if (is_break) return;
+
+  if (make_code == BACKSPACE) {
+    if (key_buffer_pos > 0) {
+      key_buffer_pos--;
+      print_backspace();
     }
-
-    if (is_break) return;
-
-    if (make_code == BACKSPACE) {
-        if (key_buffer_pos > 0) {
-            key_buffer_pos--;
-            print_backspace();
-        }
-    } 
-    else if (make_code == ENTER) {
-        print_nl();
-        key_buffer[key_buffer_pos] = '\0';  // Properly terminate the string
-        execute_command(key_buffer);
-        key_buffer_pos = 0;  // Reset buffer position
-    } 
-    else if (make_code == 0x3A) {
-        caps_lock = !caps_lock;
-    } 
-    else if (make_code == 0x39) {  // Spacebar
-        if (key_buffer_pos < sizeof(key_buffer) - 1) {
-            key_buffer[key_buffer_pos++] = ' ';
-            print_string(" ");
-        }
-    } 
-    else if (make_code <= SC_MAX) {
-        if (key_buffer_pos < sizeof(key_buffer) - 1) {
-            unsigned char uppercase = shift_pressed ^ caps_lock;
-            char letter = uppercase ? shifted_sc_ascii[make_code] : sc_ascii[make_code];
-            
-            if (letter != '?') {
-                key_buffer[key_buffer_pos++] = letter;
-                char str[2] = {letter, '\0'};
-                print_string(str);
-            }
-        }
+  } else if (make_code == ENTER) {
+    print_nl();
+    key_buffer[key_buffer_pos] = '\0';
+    execute_command(key_buffer);
+    key_buffer_pos = 0;
+  } else if (make_code == 0x3A) {
+    caps_lock = !caps_lock;
+  } else if (make_code == 0x39) {
+    if (key_buffer_pos < sizeof(key_buffer) - 1) {
+      key_buffer[key_buffer_pos++] = ' ';
+        print_string(" ");
     }
+  } else if (make_code <= SC_MAX) {
+    if (key_buffer_pos < sizeof(key_buffer) - 1) {
+      unsigned char uppercase = shift_pressed ^ caps_lock;
+      char letter = uppercase ? shifted_sc_ascii[make_code] : sc_ascii[make_code];
+        
+      if (letter != '?') {
+        key_buffer[key_buffer_pos++] = letter;
+        char str[2] = {letter, '\0'};
+        print_string(str);
+      }
+    }
+  }
 }
 
 void init_keyboard() {
