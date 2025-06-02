@@ -14,13 +14,12 @@ void init_timer(unsigned int freq) {
   unsigned int divisor = 1193180 / freq;
   port_byte_out(0x43, 0x36);
   port_byte_out(0x40, divisor & 0xFF);
-  port_byte_out(0x40, (divisor >> 8) & 0xFF);
+  port_byte_out(0x40, divisor >> 8);
 }
 
 void sleep(unsigned int milliseconds) {
-    unsigned int start_tick = tick;
-    unsigned int ticks_to_wait = milliseconds;
-    while (tick - start_tick < ticks_to_wait) {
-        asm volatile("sti\nhlt\ncli");
-    }
+  unsigned int start_tick = tick;
+  while (tick - start_tick < milliseconds) {
+    asm volatile("sti\nhlt\ncli");
+  }
 }
