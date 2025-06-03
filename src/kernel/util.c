@@ -104,11 +104,11 @@ void print_int(int n) {
 }
 
 void strncpy(char* dest, const char* src, int n) {
-    while (n > 0 && (*dest++ = *src++)) {
-        n--;
-    }
+  while (n > 0 && (*dest++ = *src++)) {
+    n--;
+  }
 
-    while (n-- > 0) {
-        *dest++ = '\0';
-    }
+  while (n-- > 0) {
+    *dest++ = '\0';
+  }
 }
