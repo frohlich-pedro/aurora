@@ -104,11 +104,11 @@ void print_int(int n) {
 }
 
 void strncpy(char* dest, const char* src, int n) {
-    while (n-- && (*dest++ = *src++)) {
-        // Copy characters until n reaches 0 or null terminator is found
+    while (n > 0 && (*dest++ = *src++)) {
+        n--;
     }
-    // Ensure null termination if we stopped because of n
-    if (n <= 0) {
-        *(dest - 1) = '\0';
+
+    while (n-- > 0) {
+        *dest++ = '\0';
     }
 }

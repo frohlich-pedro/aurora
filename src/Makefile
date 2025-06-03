@@ -8,7 +8,7 @@ OBJ_FILES = ${C_SOURCES:.c=.o cpu/interrupt.o}
 
 CC ?= x86_64-elf-gcc
 LD ?= x86_64-elf-ld
-CFLAGS = -O3 -g -m32 -ffreestanding -fno-pie -fno-stack-protector -I.
+CFLAGS = -Os -g -m32 -ffreestanding -fno-pie -fno-stack-protector -I.
 
 all: run
 
@@ -19,7 +19,7 @@ os-image.bin: boot/mbr.bin kernel.bin
 	cat $^ > $@
 
 run: os-image.bin
-	qemu-system-i386 -fda $< -audiodev pa,id=speaker -machine pcspk-audiodev=speaker
+	qemu-system-i386 -fda $< -device e1000,netdev=net0 -netdev user,id=net0 -audiodev pa,id=speaker -machine pcspk-audiodev=speaker
 
 echo: os-image.bin
 	xxd $<

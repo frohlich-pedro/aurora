@@ -12,6 +12,6 @@ unsigned char backspace(char* s);
 void append(char* s, char n);
 void strcat(char* dest, const char* src);
 void strcpy(char* dest, const char* src);
-void strncpy(char* dest, const char* src, int n);  // Add this line
+void strncpy(char* dest, const char* src, int n);
 int atoi(const char* str);
 void print_int(int n);

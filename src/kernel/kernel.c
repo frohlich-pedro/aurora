@@ -8,6 +8,7 @@
 #include "../shell/shell.h"
 #include "kernel_banner.h"
 #include "../drivers/sound.h"
+#include "../drivers/e1000.h"
 
 void start_kernel() {
   clear_screen();
@@ -22,6 +23,8 @@ void start_kernel() {
 
   int* ptr = alloc(5);
   mem_free(ptr);
+
+  e1000_init();
 
   print_banner();
   print_string("Enter \'help\' to see command list.\n\n");

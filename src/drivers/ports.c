@@ -17,3 +17,13 @@ unsigned short port_word_in(unsigned short port) {
 void port_word_out(unsigned short port, unsigned short data) {
   asm volatile ("out %%ax, %%dx" : : "a" (data), "d" (port));
 }
+
+unsigned int port_dword_in(unsigned int port) {
+  unsigned int result;
+  asm volatile ("inl %%dx, %%eax" : "=a"(result) : "d"(port));
+  return result;
+}
+
+void port_dword_out(unsigned int port, unsigned int data) {
+  asm volatile ("outl %%eax, %%dx" : : "a"(data), "d"(port));
+}
