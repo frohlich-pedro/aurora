@@ -17,13 +17,10 @@ void print_banner() {
     "\n\n"
   };
 
-  char* banner_ptr = banner;
-  char* banner_end = banner + 12;
-
   clear_screen();
-  
-  do {
+
+  for (int i = 0; i < 12; i++) {}
     sleep(20);
     print_string(*banner_ptr++);
-  } while (banner_ptr < banner_end);
+  }
 }

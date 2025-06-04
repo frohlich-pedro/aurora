@@ -19,15 +19,15 @@ void start_kernel() {
   asm volatile ("sti");
 
   init_keyboard();
-  print_string("KEYBOARD LOADED");
+  print_string("KEYBOARD LOADED\n");
   sleep(250);
 
   init_dynamic_mem();
-  print_string("DYNAMIC MEMORY LOADED");
+  print_string("DYNAMIC MEMORY LOADED\n");
   sleep(250);
 
   net_init();
-  print_string("NETWORK LOADED");
+  print_string("NETWORK LOADED\n");
   sleep(250);
 
   print_banner();
