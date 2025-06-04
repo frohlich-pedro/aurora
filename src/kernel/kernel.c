@@ -19,12 +19,16 @@ void start_kernel() {
   asm volatile ("sti");
 
   init_keyboard();
-  init_dynamic_mem();
+  print_string("KEYBOARD LOADED");
+  sleep(250);
 
-  int* ptr = alloc(5);
-  mem_free(ptr);
+  init_dynamic_mem();
+  print_string("DYNAMIC MEMORY LOADED");
+  sleep(250);
 
   net_init();
+  print_string("NETWORK LOADED");
+  sleep(250);
 
   print_banner();
   print_string("Enter \'help\' to see command list.\n\n");
