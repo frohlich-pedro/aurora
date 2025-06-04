@@ -24,7 +24,7 @@ void start_kernel() {
   int* ptr = alloc(5);
   mem_free(ptr);
 
-  e1000_init();
+  net_init();
 
   print_banner();
   print_string("Enter \'help\' to see command list.\n\n");
