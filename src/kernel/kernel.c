@@ -20,15 +20,15 @@ void start_kernel() {
 
   init_keyboard();
   print_string("KEYBOARD LOADED\n");
-  sleep(250);
+  sleep(500);
 
   init_dynamic_mem();
   print_string("DYNAMIC MEMORY LOADED\n");
-  sleep(250);
+  sleep(500);
 
   net_init();
   print_string("NETWORK LOADED\n");
-  sleep(250);
+  sleep(500);
 
   print_banner();
   print_string("Enter \'help\' to see command list.\n\n");
