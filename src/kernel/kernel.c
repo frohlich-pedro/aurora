@@ -17,21 +17,21 @@ void start_kernel() {
 
   init_timer(1000);
 
-  beep(523, 500);
+  beep(525, 250);
   print_string("SPEAKER LOADED\n");
-  sleep(500);
+  sleep(250);
 
   init_keyboard();
   print_string("KEYBOARD LOADED\n");
-  sleep(500);
+  sleep(250);
 
   init_dynamic_mem();
   print_string("DYNAMIC MEMORY LOADED\n");
-  sleep(500);
+  sleep(250);
 
   net_init();
   print_string("NETWORK LOADED\n");
-  sleep(500);
+  sleep(250);
 
   print_banner();
   print_string("Enter \'help\' to see command list.\n\n");
