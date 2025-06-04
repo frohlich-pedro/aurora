@@ -8,7 +8,7 @@
 #include "../shell/shell.h"
 #include "kernel_banner.h"
 #include "../drivers/sound.h"
-#include "../drivers/net/e1000.h"
+#include "../drivers/net/net.h"
 
 void start_kernel() {
   clear_screen();
