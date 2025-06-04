@@ -4,9 +4,9 @@
 #include "eth.h"
 
 #define ARP_HTYPE_ETHERNET 1
-#define ARP_PTYPE_IP       0x0800
-#define ARP_OP_REQUEST     1
-#define ARP_OP_REPLY       2
+#define ARP_PTYPE_IP 0x0800
+#define ARP_OP_REQUEST 1
+#define ARP_OP_REPLY 2
 
 typedef struct {
   unsigned short htype;
