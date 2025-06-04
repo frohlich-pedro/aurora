@@ -18,6 +18,10 @@ void start_kernel() {
 
   asm volatile ("sti");
 
+  beep(440, 1000);
+  print_string("SPEAKER LOADED\n");
+  sleep(500);
+
   init_keyboard();
   print_string("KEYBOARD LOADED\n");
   sleep(500);
