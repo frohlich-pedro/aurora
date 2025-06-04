@@ -1,3 +1,4 @@
+@@ -0,0 +1,87 @@
 #include "arp.h"
 #include "eth.h"
 #include "../../kernel/util.h"
@@ -17,7 +18,7 @@ void arp_init() {
 }
 
 void arp_request(unsigned char* target_ip) {
-  unsigned char *(packet + (sizeof(eth_header_t) + sizeof(arp_packet_t)));
+  unsigned char packet[sizeof(eth_header_t) + sizeof(arp_packet_t)];
   eth_header_t* eth = (eth_header_t*)packet;
   arp_packet_t* arp = (arp_packet_t*)(packet + sizeof(eth_header_t));
   
@@ -39,7 +40,7 @@ void arp_request(unsigned char* target_ip) {
 }
 
 void arp_reply(unsigned char* target_mac, unsigned char* target_ip) {
-  unsigned char *(packet + (sizeof(eth_header_t) + sizeof(arp_packet_t)));
+  unsigned char packet[sizeof(eth_header_t) + sizeof(arp_packet_t)];
   eth_header_t* eth = (eth_header_t*)packet;
   arp_packet_t* arp = (arp_packet_t*)(packet + sizeof(eth_header_t));
   
@@ -68,9 +69,9 @@ void arp_receive(arp_packet_t* arp) {
   }
   else if (arp->oper == ARP_OP_REPLY) {
     for (int i = 1; i < ARP_CACHE_SIZE; i++) {
-      if ((*(arp_cache + i)).ip[0] == 0) {
-        memcpy((*(arp_cache + i)).ip, arp->spa, 4);
-        memcpy((*(arp_cache + i)).mac, arp->sha, 6);
+      if (arp_cache[i].ip[0] == 0) {
+        memcpy(arp_cache[i].ip, arp->spa, 4);
+        memcpy(arp_cache[i].mac, arp->sha, 6);
         break;
       }
     }
@@ -79,8 +80,8 @@ void arp_receive(arp_packet_t* arp) {
 
 unsigned char* arp_lookup(unsigned char* ip) {
   for (int i = 0; i < ARP_CACHE_SIZE; i++) {
-    if (memcmp((*(arp_cache + i)).ip, ip, 4) == 0) {
-      return (*(arp_cache + i)).mac;
+    if (memcmp(arp_cache[i].ip, ip, 4) == 0) {
+      return arp_cache[i].mac;
     }
   }
   return 0;
