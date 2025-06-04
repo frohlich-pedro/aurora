@@ -19,7 +19,8 @@ void init_timer(unsigned int freq) {
 
 void sleep(unsigned int milliseconds) {
   unsigned int start_tick = tick;
+  asm volatile("sti");
   while (tick - start_tick < milliseconds) {
-    asm volatile("sti\nhlt\ncli");
+    asm volatile("hlt");
   }
 }

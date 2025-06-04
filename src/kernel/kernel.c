@@ -13,12 +13,11 @@
 void start_kernel() {
   clear_screen();
   isr_install();
+  asm volatile ("sti");
 
   init_timer(1000);
 
-  asm volatile ("sti");
-
-  beep(440, 1000);
+  beep(523, 500);
   print_string("SPEAKER LOADED\n");
   sleep(500);
 
