@@ -21,6 +21,6 @@ void print_banner() {
 
   for (int i = 0; i < 12; i++) {}
     sleep(20);
-    print_string(*banner_ptr++);
+    print_string(banner[i]);
   }
 }
