@@ -67,6 +67,7 @@ unsigned char get_weekday(unsigned char day, unsigned char month, unsigned short
     month += 12;
     year--;
   }
+  
   unsigned char q = day;
   unsigned char m = month;
   unsigned char k = year % 100;
