@@ -8,7 +8,6 @@
 #include "../shell/shell.h"
 #include "kernel_banner.h"
 #include "../drivers/sound.h"
-#include "../drivers/net/net.h"
 
 void start_kernel() {
   clear_screen();
@@ -27,10 +26,6 @@ void start_kernel() {
 
   init_dynamic_mem();
   print_string("DYNAMIC MEMORY LOADED\n");
-  sleep(250);
-
-  net_init();
-  print_string("NETWORK LOADED\n");
   sleep(250);
 
   print_banner();
