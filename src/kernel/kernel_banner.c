@@ -3,7 +3,6 @@
 
 void print_banner() {
   const char* banner[] =  {
-    "  --  Welcome to Aurora  --  \n\n",
     "  /$$$$$$                                                    /$$$$$$   /$$$$$$ \n",
     " /$$__  $$                                                  /$$__  $$ /$$__  $$\n",
     "| $$  \\ $$ /$$   /$$  /$$$$$$   /$$$$$$   /$$$$$$  /$$$$$$ | $$  \\ $$| $$  \\__/\n",
@@ -17,10 +16,8 @@ void print_banner() {
     "\n\n"
   };
 
-  clear_screen();
-
-  for (int i = 0; i < 12; i++) {
+  for (int i = 0; i < 11; i++) {
     sleep(50);
-    print_string(banner[i]);
+    print_string(banner[i], VGA_WHITE);
   }
 }

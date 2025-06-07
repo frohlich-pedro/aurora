@@ -14,7 +14,7 @@ void strcat(char* dest, const char* src);
 void strcpy(char* dest, const char* src);
 void strncpy(char* dest, const char* src, int n);
 int atoi(const char* str);
-void print_int(int n);
+void print_int(int n, unsigned char color);
 void* memset(void* s, int c, unsigned int n);
 void* memcpy(void* dest, const void* src, unsigned int n);
 int memcmp(const void* s1, const void* s2, unsigned int n);

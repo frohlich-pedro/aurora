@@ -31,10 +31,10 @@ int move_offset_to_new_line(int offset) {
   return get_offset(0, get_row_from_offset(offset) + 1);
 }
 
-void set_char_at_video_memory(char character, int offset) {
+void set_char_at_video_memory(char character, int offset, unsigned char color) {
   unsigned char* vidmem = (unsigned char*)VIDEO_ADDRESS;
   *(vidmem + offset) = character;
-  *(vidmem + offset + 1) = WHITE_ON_BLACK;
+  *(vidmem + offset + 1) = color;
 }
 
 int scroll_ln(int offset) {
@@ -48,13 +48,13 @@ int scroll_ln(int offset) {
   unsigned char* end_line = last_line + (MAX_COLS * 2);
   while (last_line < end_line) {
     *last_line++ = ' ';
-    *last_line++ = WHITE_ON_BLACK;
+    *last_line++ = VGA_WHITE;
   }
   
   return offset - (MAX_COLS << 1);
 }
 
-void print_string(const char* string) {
+void print_string(const char* string, unsigned char color) {
   int offset = get_cursor();
   
   do {
@@ -65,7 +65,7 @@ void print_string(const char* string) {
     if (*string == '\n') {
       offset = move_offset_to_new_line(offset);
     } else {
-      set_char_at_video_memory(*string, offset);
+      set_char_at_video_memory(*string, offset, color);
       offset += 2;
     }
     
@@ -89,7 +89,7 @@ void clear_screen() {
   
   do {
     *vidmem++ = ' ';
-    *vidmem++ = WHITE_ON_BLACK;
+    *vidmem++ = VGA_WHITE;
   } while (vidmem < end);
   
   set_cursor(get_offset(0, 0));
@@ -97,6 +97,6 @@ void clear_screen() {
 
 void print_backspace() {
   int new_cursor = get_cursor() - 2;
-  set_char_at_video_memory(' ', new_cursor);
+  set_char_at_video_memory(' ', new_cursor, VGA_WHITE);
   set_cursor(new_cursor);
 }

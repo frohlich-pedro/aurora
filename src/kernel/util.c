@@ -127,10 +127,10 @@ int atoi(const char* str) {
   return sign * result;
 }
 
-void print_int(int n) {
+void print_int(int n, unsigned char color) {
   char str[16];
   int_to_string(n, str);
-  print_string(str);
+  print_string(str, color);
 }
 
 void strncpy(char* dest, const char* src, int n) {

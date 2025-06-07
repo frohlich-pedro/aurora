@@ -123,10 +123,10 @@ void isr_install() {
 void isr_handler(registers_t* r) {
   char s[3];
   int_to_string(r->int_no, s);
-  print_string("INT: ");
-  print_string(s);
-  print_string(" - ");
-  print_string(*(exception_messages + r->int_no));
+  print_string("INT: ", VGA_WHITE);
+  print_string(s, VGA_WHITE);
+  print_string(" - ", VGA_WHITE);
+  print_string(*(exception_messages + r->int_no), VGA_WHITE);
   print_nl();
 }
 

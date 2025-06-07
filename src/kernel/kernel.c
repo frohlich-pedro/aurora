@@ -17,18 +17,20 @@ void start_kernel() {
   init_timer(1000);
 
   beep(525, 250);
-  print_string("SPEAKER LOADED\n");
+  print_string("SPEAKER LOADED\n", VGA_GREEN);
   sleep(250);
 
   init_keyboard();
-  print_string("KEYBOARD LOADED\n");
+  print_string("KEYBOARD LOADED\n", VGA_GREEN);
   sleep(250);
 
   init_dynamic_mem();
-  print_string("DYNAMIC MEMORY LOADED\n");
+  print_string("DYNAMIC MEMORY LOADED\n", VGA_GREEN);
   sleep(250);
 
+	clear_screen();
+	print_string("  --  Welcome to Aurora  --  \n\n", VGA_LIGHT_MAGENTA);
   print_banner();
-  print_string("Enter \'help\' to see command list.\n\n");
+  print_string("Enter \'help\' to see command list.\n\n", VGA_WHITE);
   shell_init();
 }

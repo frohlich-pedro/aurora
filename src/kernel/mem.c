@@ -31,31 +31,31 @@ void init_dynamic_mem() {
 void print_dynamic_node_size() {
   char node_size_string[256];
   int_to_string(DYNAMIC_MEM_NODE_SIZE, node_size_string);
-  print_string("DYNAMIC_MEM_NODE_SIZE = ");
-  print_string(node_size_string);
+  print_string("DYNAMIC_MEM_NODE_SIZE = ", VGA_WHITE);
+  print_string(node_size_string, VGA_WHITE);
   print_nl();
 }
 
 void print_dynamic_mem_node(dynamic_mem_node_t *node) {
   char size_string[256];
   int_to_string(node->size, size_string);
-  print_string("{size = ");
-  print_string(size_string);
+  print_string("{size = ", VGA_WHITE);
+  print_string(size_string, VGA_WHITE);
   char used_string[256];
   int_to_string(node->used, used_string);
-  print_string("; used = ");
-  print_string(used_string);
-  print_string("}; ");
+  print_string("; used = ", VGA_WHITE);
+  print_string(used_string, VGA_WHITE);
+  print_string("}; ", VGA_WHITE);
 }
 
 void print_dynamic_mem() {
   dynamic_mem_node_t *current = dynamic_mem_start;
-  print_string("[");
+  print_string("[", VGA_WHITE);
   while (current != NULL_POINTER) {
     print_dynamic_mem_node(current);
     current = current->next;
   }
-  print_string("]\n");
+  print_string("]\n", VGA_WHITE);
 }
 
 void* find_best_mem_block(dynamic_mem_node_t* dynamic_mem, unsigned int size) {
@@ -139,7 +139,7 @@ void mem_free(void* p) {
 void* alloc(int n) {
   int* ptr = (int*) mem_alloc(n * sizeof(int));
   if (ptr == NULL_POINTER) {
-    print_string("Memory not allocated.\n");
+    print_string("Memory not allocated.\n", VGA_RED);
   }
   
   return ptr;

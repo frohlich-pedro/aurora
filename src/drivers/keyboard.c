@@ -65,7 +65,7 @@ static void keyboard_callback(registers_t* regs) {
   } else if (make_code == 0x39) {
     if (key_buffer_pos < sizeof(key_buffer) - 1) {
       key_buffer[key_buffer_pos++] = ' ';
-        print_string(" ");
+        print_string(" ", VGA_WHITE);
     }
   } else if (make_code <= SC_MAX) {
     if (key_buffer_pos < sizeof(key_buffer) - 1) {
@@ -75,7 +75,7 @@ static void keyboard_callback(registers_t* regs) {
       if (letter != '?') {
         key_buffer[key_buffer_pos++] = letter;
         char str[2] = {letter, '\0'};
-        print_string(str);
+        print_string(str, VGA_WHITE);
       }
     }
   }

@@ -5,13 +5,13 @@ void help(const char* args) {
 
   const shell_command_t* cmd = commands;
   asm volatile ("cli");
-  print_string("Available commands:\n");
+  print_string("Available commands:\n", VGA_WHITE);
   do {
-    print_string("  ");
-    print_string(cmd->name);
-    print_string(" - ");
-    print_string(cmd->definition);
-    print_string("\n");
+    print_string("  ", VGA_WHITE);
+    print_string(cmd->name, VGA_WHITE);
+    print_string(" - ", VGA_WHITE);
+    print_string(cmd->definition, VGA_WHITE);
+    print_string("\n", VGA_WHITE);
     cmd++;
   } while (cmd->name != 0);
   asm volatile ("sti");
