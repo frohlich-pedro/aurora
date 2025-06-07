@@ -18,6 +18,7 @@ static const shell_command_t commands[] = {
   {"date", date, "shows current date (DD/MM/YYYY)"},
   {"beep", cmd_beep, "plays a beep - usage: beep [freq] [duration]"},
   {"echo", echo, "prints arguments to screen - usage: echo [text]"},
+  {"fetch", fetch, "displays system information"},
   {0, 0, 0}
 };
 

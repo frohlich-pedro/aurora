@@ -18,16 +18,17 @@ void start_kernel() {
 
   beep(525, 250);
   print_string("SPEAKER LOADED\n", VGA_GREEN);
-  sleep(250);
+	sleep(25);
 
   init_keyboard();
   print_string("KEYBOARD LOADED\n", VGA_GREEN);
-  sleep(250);
+	sleep(25);
 
   init_dynamic_mem();
   print_string("DYNAMIC MEMORY LOADED\n", VGA_GREEN);
-  sleep(250);
+	sleep(25);
 
+	sleep(250);
 	clear_screen();
 	print_string("  --  Welcome to Aurora  --  \n\n", VGA_LIGHT_MAGENTA);
   print_banner();

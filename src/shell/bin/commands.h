@@ -8,3 +8,4 @@ void time(const char* args);
 void date(const char* args);
 void cmd_beep(const char* args);
 void echo(const char* args);
+void fetch(const char* args);

@@ -17,7 +17,7 @@ void print_banner() {
   };
 
   for (int i = 0; i < 11; i++) {
-    sleep(50);
+    sleep(25);
     print_string(banner[i], VGA_WHITE);
   }
 }
