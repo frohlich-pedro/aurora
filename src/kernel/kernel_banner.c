@@ -2,7 +2,7 @@
 #include "../cpu/timer.h"
 
 void print_banner() {
-  const char** banner = (char* []) {
+  const char* banner[] = {
     "  /$$$$$$                                                    /$$$$$$   /$$$$$$ \n",
     " /$$__  $$                                                  /$$__  $$ /$$__  $$\n",
     "| $$  \\ $$ /$$   /$$  /$$$$$$   /$$$$$$   /$$$$$$  /$$$$$$ | $$  \\ $$| $$  \\__/\n",
