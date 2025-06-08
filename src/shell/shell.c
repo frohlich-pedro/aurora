@@ -3,12 +3,8 @@
 #include "../kernel/mem.h"
 #include "bin/commands.h"
 
-void print_shell_prompt() {
-  print_string("> ", VGA_LIGHT_GREEN);
-}
-
 void shell_init() {
-  print_shell_prompt();
+  print_string("> ", VGA_LIGHT_GREEN);
 }
 
 void execute_command(const char* input) {
@@ -16,7 +12,7 @@ void execute_command(const char* input) {
   
   if (!*input) {
     print_string("\n", VGA_WHITE);
-    print_shell_prompt();
+    shell_init();
     return;
   }
 
@@ -41,7 +37,7 @@ void execute_command(const char* input) {
   while (current_cmd->name) {
     if (compare_string(cmd, current_cmd->name) == 0) {
       current_cmd->func(args);
-      print_shell_prompt();
+      shell_init();
       return;
     }
     current_cmd++;
@@ -50,5 +46,5 @@ void execute_command(const char* input) {
   print_string("Unknown command: ", VGA_YELLOW);
   print_string(input, VGA_WHITE);
   print_string("\n", VGA_WHITE);
-  print_shell_prompt();
+  shell_init();
 }

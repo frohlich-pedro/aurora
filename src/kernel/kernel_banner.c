@@ -1,5 +1,4 @@
 #include "../drivers/display.h"
-#include "../cpu/timer.h"
 
 void print_banner() {
   const char* banner[] = {
@@ -18,7 +17,6 @@ void print_banner() {
   const char** banner_end = banner + 9;
 
   do {
-    sleep(25);
     print_string(*banner_ptr++, VGA_WHITE);
   } while (banner_ptr < banner_end);
 }

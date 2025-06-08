@@ -20,16 +20,13 @@ void start_kernel() {
   init_timer(1000);
 
   beep(525, 250);
-  print_string("SPEAKER LOADED\n", VGA_GREEN);
-  sleep(25);
+  print_string("SPEAKER LOADED\n", VGA_LIGHT_GREEN);
 
   init_keyboard();
-  print_string("KEYBOARD LOADED\n", VGA_GREEN);
-  sleep(25);
+  print_string("KEYBOARD LOADED\n", VGA_LIGHT_GREEN);
 
   init_dynamic_mem();
-  print_string("DYNAMIC MEMORY LOADED\n", VGA_GREEN);
-  sleep(25);
+  print_string("DYNAMIC MEMORY LOADED\n", VGA_LIGHT_GREEN);
 
   sleep(250);
   clear_screen();
