@@ -2,7 +2,7 @@
 #include "../cpu/timer.h"
 
 void print_banner() {
-  const char* banner[] =  {
+  const char** banner = (char* []) {
     "  /$$$$$$                                                    /$$$$$$   /$$$$$$ \n",
     " /$$__  $$                                                  /$$__  $$ /$$__  $$\n",
     "| $$  \\ $$ /$$   /$$  /$$$$$$   /$$$$$$   /$$$$$$  /$$$$$$ | $$  \\ $$| $$  \\__/\n",
@@ -11,13 +11,14 @@ void print_banner() {
     "| $$  | $$| $$  | $$| $$      | $$  | $$| $$      /$$__  $$| $$  | $$ /$$  \\ $$\n",
     "| $$  | $$|  $$$$$$/| $$      |  $$$$$$/| $$     |  $$$$$$$|  $$$$$$/|  $$$$$$/\n",
     "|__/  |__/ \\______/ |__/       \\______/ |__/      \\_______/ \\______/  \\______/ \n",
-    "\n - Version:   0.0.0",
-    "\n - Copyright: Copyright (C) 2025 Pedro Frohlich, AuroraOS",
     "\n\n"
   };
 
-  for (int i = 0; i < 11; i++) {
+  char** banner_ptr = banner;
+  char** banner_end = banner + 9;
+
+  do {
     sleep(25);
-    print_string(banner[i], VGA_WHITE);
-  }
+    print_string(*banner_ptr++, VGA_WHITE);
+  } while (banner_ptr < banner_end);
 }
