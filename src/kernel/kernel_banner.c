@@ -14,8 +14,8 @@ void print_banner() {
     "\n\n"
   };
 
-  char** banner_ptr = banner;
-  char** banner_end = banner + 9;
+  const char** banner_ptr = banner;
+  const char** banner_end = banner + 9;
 
   do {
     sleep(25);
