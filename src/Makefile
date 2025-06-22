@@ -1,7 +1,3 @@
-# $@ = target file
-# $< = first dependency
-# $^ = all dependencies
-
 C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c shell/*.c shell/bin/*.c)
 HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h shell/*.h shell/bin/*.h)
 OBJ_FILES = ${C_SOURCES:.c=.o cpu/interrupt.o}
@@ -19,7 +15,7 @@ os-image.bin: boot/mbr.bin kernel.bin
 	cat $^ > $@
 
 run: os-image.bin
-	qemu-system-i386 -fda $< -device e1000,netdev=net0 -netdev user,id=net0 -audiodev pa,id=speaker -machine pcspk-audiodev=speaker
+	qemu-system-i386 -fda $< -device e1000,netdev=net0 -netdev user,id=net0 -audiodev oss,id=speaker -machine pcspk-audiodev=speaker
 
 echo: os-image.bin
 	xxd $<

@@ -21,6 +21,6 @@ void date(const char* args) {
   p += 4;
   *p = '\0';
   
-  print_string(date_str, VGA_WHITE);
-  print_string("\n", VGA_WHITE);
+  print_string(date_str, VGA_BLACK);
+  print_string("\n", VGA_BLACK);
 }

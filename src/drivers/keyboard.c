@@ -17,6 +17,10 @@ static unsigned int key_buffer_pos = 0;
 static unsigned char shift_pressed = 0;
 static unsigned char caps_lock = 0;
 
+static char stdin_buffer[256];
+static unsigned int stdin_pos = 0;
+static unsigned char stdin_ready = 0;
+
 #define SC_MAX 57
 
 const char *sc_name[] = {"ERROR", "Esc", "1", "2", "3", "4", "5", "6",
@@ -55,9 +59,22 @@ static void keyboard_callback(registers_t* regs) {
       key_buffer_pos--;
       print_backspace();
     }
+    if (stdin_pos > 0 && !stdin_ready) {
+      stdin_pos--;
+    }
   } else if (make_code == ENTER) {
     print_nl();
     key_buffer[key_buffer_pos] = '\0';
+    
+    register int i asm("ecx") = 0;
+    while (i < key_buffer_pos && i < sizeof(stdin_buffer) - 1) {
+      stdin_buffer[i] = key_buffer[i];
+      i++;
+    }
+    stdin_buffer[i] = '\n';
+    stdin_pos = i + 1;
+    stdin_ready = 1;
+    
     execute_command(key_buffer);
     key_buffer_pos = 0;
   } else if (make_code == 0x3A) {
@@ -65,7 +82,10 @@ static void keyboard_callback(registers_t* regs) {
   } else if (make_code == 0x39) {
     if (key_buffer_pos < sizeof(key_buffer) - 1) {
       key_buffer[key_buffer_pos++] = ' ';
-        print_string(" ", VGA_WHITE);
+      print_string(" ", VGA_BLACK);
+    }
+    if (stdin_pos < sizeof(stdin_buffer) - 1 && !stdin_ready) {
+      stdin_buffer[stdin_pos++] = ' ';
     }
   } else if (make_code <= SC_MAX) {
     if (key_buffer_pos < sizeof(key_buffer) - 1) {
@@ -75,10 +95,42 @@ static void keyboard_callback(registers_t* regs) {
       if (letter != '?') {
         key_buffer[key_buffer_pos++] = letter;
         char str[2] = {letter, '\0'};
-        print_string(str, VGA_WHITE);
+        print_string(str, VGA_BLACK);
+        
+        if (stdin_pos < sizeof(stdin_buffer) - 1 && !stdin_ready) {
+          stdin_buffer[stdin_pos++] = letter;
+        }
       }
     }
   }
+}
+
+int get_stdin_buffer(char* buffer, int max_count) {
+  if (!stdin_ready || stdin_pos == 0) {
+    return 0;
+  }
+  
+  int bytes_to_copy = (stdin_pos < max_count) ? stdin_pos : max_count;
+  
+  register int i asm("ecx") = 0;
+  while (i < bytes_to_copy) {
+    buffer[i] = stdin_buffer[i];
+    i++;
+  }
+  
+  stdin_ready = 0;
+  stdin_pos = 0;
+  
+  return bytes_to_copy;
+}
+
+int stdin_available() {
+  return stdin_ready ? stdin_pos : 0;
+}
+
+void clear_stdin_buffer() {
+  stdin_ready = 0;
+  stdin_pos = 0;
 }
 
 void init_keyboard() {

@@ -21,12 +21,21 @@
 #define VGA_YELLOW 0x0e
 #define VGA_WHITE 0x0f
 
-
 #define REG_SCREEN_CTRL 0x3d4
 #define REG_SCREEN_DATA 0x3d5
 
-void print_string(const char* string, unsigned char color);
 void print_nl(void);
 void clear_screen(void);
 void print_backspace(void);
 int get_cursor(void);
+void init_curses_display(void);
+void update_panel(void);
+void refresh_display(void);
+void clear_content_area(void);
+void print_string(const char* string, unsigned char text_color);
+void get_content_cursor_position(int* row, int* col);
+void set_content_cursor_position(int row, int col);
+void print_at_position(int row, int col, const char* text, unsigned char color);
+void print_centered(int row, int start_col, int width, const char* text, unsigned char color);
+void fill_area(int start_row, int end_row, int start_col, int end_col, char character, unsigned char color);
+void draw_horizontal_line(int row, int start_col, int end_col, char character, unsigned char color);

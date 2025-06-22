@@ -21,6 +21,6 @@ void time(const char* args) {
   *p++ = '0' + (date.second % 10);
   *p = '\0';
   
-  print_string(time_str, VGA_WHITE);
-  print_string("\n", VGA_WHITE);
+  print_string(time_str, VGA_BLACK);
+  print_string("\n", VGA_BLACK);
 }

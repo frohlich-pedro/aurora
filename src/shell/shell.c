@@ -4,14 +4,14 @@
 #include "bin/commands.h"
 
 void shell_init() {
-  print_string("> ", VGA_LIGHT_GREEN);
+  print_string(" > ", VGA_BLACK);
 }
 
 void execute_command(const char* input) {
   while (*input == ' ') input++;
   
   if (!*input) {
-    print_string("\n", VGA_WHITE);
+    print_string("\n", VGA_BLACK);
     shell_init();
     return;
   }
@@ -43,8 +43,8 @@ void execute_command(const char* input) {
     current_cmd++;
   }
 
-  print_string("Unknown command: ", VGA_YELLOW);
-  print_string(input, VGA_WHITE);
-  print_string("\n", VGA_WHITE);
+  print_string("Unknown command: ", VGA_LIGHT_RED);
+  print_string(input, VGA_BLACK);
+  print_string("\n", VGA_BLACK);
   shell_init();
 }
