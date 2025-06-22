@@ -39,3 +39,5 @@ void print_at_position(int row, int col, const char* text, unsigned char color);
 void print_centered(int row, int start_col, int width, const char* text, unsigned char color);
 void fill_area(int start_row, int end_row, int start_col, int end_col, char character, unsigned char color);
 void draw_horizontal_line(int row, int start_col, int end_col, char character, unsigned char color);
+void draw_panel();
+void print_color(unsigned char color);
