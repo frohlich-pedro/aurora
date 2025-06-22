@@ -1,15 +1,48 @@
-# Aurora
-Aurora is a completely new kernel, it's not a Linux nor a BSD, it's a complete new kernel from scratch, the name comes from my cat (RIP Aurora). so i wanted to imortalize her by naming my kernel after her. \
-Don't expect it to be the new Linux, since i'm a 17y boy who's alone in this project. i accept critics btw
+# Aurora Kernel
 
-### How to run
-> [!NOTE]
-> You need the following packages: qemu-system-i386, nasm, gcc, make
+A ground-up operating system kernel written from scratch. Aurora is an independent project—not based on Linux, BSD, or any existing codebase. The name honors my cat Aurora, who was my constant companion during late coding sessions.
 
-```sh
-# Build and run kernel
+## Features
+
+- **Custom architecture**: Built entirely from scratch with original design decisions
+- **Minimalist approach**: Focus on clean, understandable code over feature bloat  
+- **Educational**: Designed to explore fundamental OS concepts without legacy constraints
+- **Active development**: Continuously evolving as a learning platform
+
+## Getting Started
+
+### Prerequisites
+```
+qemu-system-i386    # Virtualization
+nasm               # Assembly compiler
+gcc                # C compiler  
+make               # Build system
+```
+
+### Building & Running
+```bash
+# Build and launch Aurora
 make all
 
-# clean built files
+# Clean build artifacts
 make clean
 ```
+
+## Project Goals
+
+Aurora aims to be a testbed for experimenting with kernel design patterns and system programming concepts. This is a solo project by a 17-year-old developer, so don't expect production-ready stability—but do expect genuine passion for systems programming and continuous improvement.
+
+## Development Philosophy
+
+- **Learning over perfection**: Every bug is a lesson, every feature a chance to grow
+- **Performance first**: Performance over readability, i'm tired of the other way, x86 all the way. What you gonna do about it???
+- **Experimental**: Not afraid to try unconventional approaches
+- **Community-driven feedback**: Constructive criticism helps Aurora evolve
+
+## Contributing
+
+Feedback, suggestions, and constructive criticism are welcome. This project thrives on learning from the community.
+
+---
+
+*Aurora Kernel - Built with curiosity and determination*
