@@ -14,9 +14,9 @@ A ground-up operating system kernel written from scratch. Aurora is an independe
 ### Prerequisites
 ```
 qemu-system-i386    # Virtualization
-nasm               # Assembly compiler
-gcc                # C compiler  
-make               # Build system
+nasm                # Assembler
+gcc                 # C compiler  
+make (gmake in BSD) # Build system
 ```
 
 ### Building & Running
