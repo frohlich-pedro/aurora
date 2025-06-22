@@ -45,4 +45,4 @@ Feedback, suggestions, and constructive criticism are welcome. This project thri
 
 ---
 
-*Aurora Kernel - Built with curiosity and determination*
+*In Memory of Aurora*
