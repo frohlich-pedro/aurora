@@ -15,17 +15,10 @@ os-image.bin: boot/mbr.bin kernel.bin
 	cat $^ > $@
 
 run: os-image.bin
-	qemu-system-i386 -fda $< -device e1000,netdev=net0 -netdev user,id=net0 -audiodev oss,id=speaker -machine pcspk-audiodev=speaker
-
-echo: os-image.bin
-	xxd $<
+	qemu-system-x86_64 -fda $< -device e1000,netdev=net0 -netdev user,id=net0 -audiodev oss,id=speaker -machine pcspk-audiodev=speaker
 
 kernel.elf: boot/kernel_entry.o ${OBJ_FILES}
 	$(LD) -m elf_i386 -o $@ -Ttext 0x1000 $^
-
-debug: os-image.bin kernel.elf
-	qemu-system-i386 -s -S -fda os-image.bin -audiodev pa,id=speaker -machine pcspk-audiodev=speaker -d guest_errors,int &
-	i386-elf-gdb -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 %.o: %.c ${HEADERS}
 	$(CC) $(CFLAGS) -c $< -o $@
