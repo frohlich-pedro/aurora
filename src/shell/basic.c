@@ -5,7 +5,7 @@ unsigned char in_basic_mode = 0;
 
 void basic_init() {
   in_basic_mode = 1;
-  print_string("MY-BASIC Interpreter v1.0\n", VGA_LIGHT_GREEN);
+  print_string("AURORA-BASIC Interpreter v0.0\n", VGA_LIGHT_GREEN);
   print_string("Type 'list' to view lines, 'run' to execute, 'erase' to clear, or 'exit' to quit\n", VGA_LIGHT_CYAN);
 }
 
@@ -97,9 +97,9 @@ void basic_run() {
     int i = 0;
     
     while (*cmd && *cmd != ' ' && i < sizeof(command)-1) {
-      command[i++] = *cmd++;
+      *(command + i++) = *cmd++;
     }
-    command[i] = '\0';
+    *(command + i) = '\0';
 
     if (compare_string(command, "print") == 0 || 
       compare_string(command, "println") == 0) {
