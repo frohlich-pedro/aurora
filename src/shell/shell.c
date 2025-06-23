@@ -2,12 +2,18 @@
 #include "../lib/util.h"
 #include "../mm/mem.h"
 #include "bin/commands.h"
+#include "basic.h"
 
 void shell_init() {
   print_string("> ", VGA_LIGHT_GREEN);
 }
 
 void execute_command(const char* input) {
+  if (in_basic_mode) {
+    basic_execute_command(input);
+    return;
+  }
+  
   while (*input == ' ') input++;
   
   if (!*input) {
@@ -27,7 +33,7 @@ void execute_command(const char* input) {
   if (*args) {
     *args = '\0';
     args++;
-    
+      
     while (*args == ' ') args++;
   } else {
     args = "";

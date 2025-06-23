@@ -2,6 +2,7 @@
 
 #include "../lib/modules/display.h"
 #include "bin/commands.h"
+#include "basic.h"
 
 typedef struct {
   const char* name;
@@ -19,6 +20,7 @@ static const shell_command_t commands[] = {
   {"beep", cmd_beep, "plays a beep - usage: beep [freq] [duration]"},
   {"echo", echo, "prints arguments to screen - usage: echo [text]"},
   {"fetch", fetch, "displays system information"},
+  {"basic", basic_init, "enters BASIC programming environment"},
   {0, 0, 0}
 };
 
