@@ -5,7 +5,6 @@
 #include "../mm/mem.h"
 
 #define MAX_VARS 26
-#define MAX_FOR_LOOPS 10
 #define MAX_GOSUB_STACK 10
 #define MAX_INPUT_LENGTH 256
 
@@ -19,14 +18,6 @@ typedef struct {
   int value;
   char is_set;
 } Variable;
-
-typedef struct {
-  int line_number;
-  int counter;
-  int limit;
-  int step;
-  char var;
-} ForLoop;
 
 typedef struct {
   int return_line;

@@ -2,8 +2,6 @@
 
 static BasicLine* basic_lines = NULL_POINTER;
 static Variable variables[MAX_VARS];
-static ForLoop for_stack[MAX_FOR_LOOPS];
-static int for_stack_top = -1;
 static GosubFrame gosub_stack[MAX_GOSUB_STACK];
 static int gosub_stack_top = -1;
 static int random_seed = 1;
@@ -14,7 +12,6 @@ unsigned char in_basic_mode = 0;
 void basic_init() {
   in_basic_mode = 1;
   basic_clear_variables();
-  for_stack_top = -1;
   gosub_stack_top = -1;
   random_seed = 1;
   current_line = NULL_POINTER;
@@ -36,15 +33,15 @@ void basic_clear_variables() {
 }
 
 void basic_set_variable(char var, int value) {
-  if (var >= 'A' && var <= 'Z') {
-    variables[var - 'A'].value = value;
-    variables[var - 'A'].is_set = 1;
+  if (var >= 'a' && var <= 'z') {
+    variables[var - 'a'].value = value;
+    variables[var - 'a'].is_set = 1;
   }
 }
 
 int basic_get_variable(char var) {
-  if (var >= 'A' && var <= 'Z') {
-    return variables[var - 'A'].value;
+  if (var >= 'a' && var <= 'z') {
+    return variables[var - 'a'].value;
   }
   return 0;
 }
@@ -102,18 +99,18 @@ int basic_evaluate_expression(const char* expr) {
     while (*s == ' ') s++;
     if (*s == '\0') break;
     
-    if (*s >= 'A' && *s <= 'Z') {
+    if (*s >= 'a' && *s <= 'z') {
       value = basic_get_variable(*s);
       s++;
     }
-    else if (string_length(s) >= 4 && s[0] == 'R' && s[1] == 'N' && s[2] == 'D' && s[3] == '(') {
+    else if (string_length(s) >= 4 && s[0] == 'r' && s[1] == 'n' && s[2] == 'd' && s[3] == '(') {
       s += 4;
       int max_val = basic_evaluate_expression(s);
       while (*s && *s != ')') s++;
       if (*s == ')') s++;
       value = basic_random(max_val);
     }
-    else if (string_length(s) >= 4 && s[0] == 'A' && s[1] == 'B' && s[2] == 'S' && s[3] == '(') {
+    else if (string_length(s) >= 4 && s[0] == 'a' && s[1] == 'b' && s[2] == 's' && s[3] == '(') {
       s += 4;
       int abs_val = basic_evaluate_expression(s);
       while (*s && *s != ')') s++;
@@ -246,7 +243,6 @@ void basic_erase() {
   }
   basic_lines = NULL_POINTER;
   basic_clear_variables();
-  for_stack_top = -1;
   gosub_stack_top = -1;
   print_string("All lines and variables cleared\n", VGA_LIGHT_GREEN);
 }
@@ -265,12 +261,12 @@ int basic_execute_line(BasicLine* line) {
   
   while (*cmd == ' ') cmd++;
   
-  if (compare_string(command, "REM") == 0) {
+  if (compare_string(command, "rem") == 0) {
     return 0;
   }
   
-else if (compare_string(command, "PRINT") == 0 || 
-         compare_string(command, "PRINTLN") == 0) {
+else if (compare_string(command, "print") == 0 || 
+         compare_string(command, "println") == 0) {
   
   int suppress_newline = 0;
   
@@ -325,8 +321,8 @@ else if (compare_string(command, "PRINT") == 0 ||
   }
   return 0;
 }
-  else if (compare_string(command, "LET") == 0) {
-    if (*cmd >= 'A' && *cmd <= 'Z') {
+  else if (compare_string(command, "let") == 0) {
+    if (*cmd >= 'a' && *cmd <= 'z') {
       char var = *cmd;
       cmd++;
       while (*cmd == ' ') cmd++;
@@ -340,7 +336,7 @@ else if (compare_string(command, "PRINT") == 0 ||
     return 0;
   }
   
-  else if (command[0] >= 'A' && command[0] <= 'Z' && command[1] == '\0') {
+  else if (command[0] >= 'a' && command[0] <= 'z' && command[1] == '\0') {
     char var = command[0];
     while (*cmd == ' ') cmd++;
     if (*cmd == '=') {
@@ -352,7 +348,7 @@ else if (compare_string(command, "PRINT") == 0 ||
     return 0;
   }
   
-  else if (compare_string(command, "IF") == 0) {
+  else if (compare_string(command, "if") == 0) {
     char* left_start = cmd;
     char* comparison_pos = cmd;
     
@@ -361,7 +357,7 @@ else if (compare_string(command, "PRINT") == 0 ||
     }
     
     if (*comparison_pos == '\0') {
-      print_string("IF: No comparison operator found\n", VGA_LIGHT_RED);
+      print_string("if: No comparison operator found\n", VGA_LIGHT_RED);
       return -1;
     }
     
@@ -372,7 +368,7 @@ else if (compare_string(command, "PRINT") == 0 ||
     
     char op = *comparison_pos;
     comparison_pos++;
-    if (op == '<' && *comparison_pos == '>') { // <>
+    if (op == '<' && *comparison_pos == '>') {
       op = '!';
       comparison_pos++;
     }
@@ -381,8 +377,8 @@ else if (compare_string(command, "PRINT") == 0 ||
     char* right_start = comparison_pos;
     
     char* then_pos = right_start;
-    while (*then_pos && !(then_pos[0] == 'T' && then_pos[1] == 'H' && 
-                          then_pos[2] == 'E' && then_pos[3] == 'N')) {
+    while (*then_pos && !(then_pos[0] == 't' && then_pos[1] == 'h' && 
+                          then_pos[2] == 'e' && then_pos[3] == 'n')) {
       then_pos++;
     }
     
@@ -424,95 +420,9 @@ else if (compare_string(command, "PRINT") == 0 ||
     return 0;
   }
   
-  else if (compare_string(command, "FOR") == 0) {
-    if (for_stack_top >= MAX_FOR_LOOPS - 1) {
-      print_string("FOR loop stack overflow\n", VGA_LIGHT_RED);
-      return -1;
-    }
-    
-    char var = *cmd;
-    cmd++;
-    while (*cmd == ' ') cmd++;
-    if (*cmd == '=') {
-      cmd++;
-      int start_val = basic_evaluate_expression(cmd);
-      basic_set_variable(var, start_val);
-      
-      while (*cmd && !(cmd[0] == 'T' && cmd[1] == 'O')) cmd++;
-      if (*cmd) cmd += 2;
-      
-      int limit = basic_evaluate_expression(cmd);
-      
-      int step = 1;
-      while (*cmd && !(cmd[0] == 'S' && cmd[1] == 'T' && cmd[2] == 'E' && cmd[3] == 'P')) cmd++;
-      if (*cmd) {
-        cmd += 4;
-        step = basic_evaluate_expression(cmd);
-      }
-      
-      for_stack_top++;
-      for_stack[for_stack_top].line_number = line->line_number;
-      for_stack[for_stack_top].var = var;
-      for_stack[for_stack_top].counter = start_val;
-      for_stack[for_stack_top].limit = limit;
-      for_stack[for_stack_top].step = step;
-    }
-    return 0;
-  }
-  
-  else if (compare_string(command, "NEXT") == 0) {
-    if (for_stack_top < 0) {
-      print_string("NEXT without FOR\n", VGA_LIGHT_RED);
-      return -1;
-    }
-    
-    char next_var = '\0';
-    if (*cmd >= 'A' && *cmd <= 'Z') {
-      next_var = *cmd;
-    }
-    
-    int loop_index = for_stack_top;
-    if (next_var != '\0') {
-      loop_index = -1;
-      for (int i = for_stack_top; i >= 0; i--) {
-        if (for_stack[i].var == next_var) {
-          loop_index = i;
-          break;
-        }
-      }
-      
-      if (loop_index == -1) {
-        print_string("NEXT variable not found in FOR stack\n", VGA_LIGHT_RED);
-        return -1;
-      }
-    }
-    
-    ForLoop* loop = &for_stack[loop_index];
-    int current_val = basic_get_variable(loop->var);
-    current_val += loop->step;
-    basic_set_variable(loop->var, current_val);
-    
-    int continue_loop = (loop->step > 0) ? (current_val <= loop->limit) : (current_val >= loop->limit);
-    
-    if (continue_loop) {
-      BasicLine* target = basic_find_line(loop->line_number);
-      if (target) {
-        current_line = target;
-        return 1;
-      }
-    } else {
-      for (int i = for_stack_top; i >= loop_index; i--) {
-        for_stack_top--;
-      }
-      for_stack_top++;
-      for_stack_top = loop_index - 1;
-    }
-    return 0;
-  }
-  
-  else if (compare_string(command, "GOSUB") == 0) {
+  else if (compare_string(command, "gosub") == 0) {
     if (gosub_stack_top >= MAX_GOSUB_STACK - 1) {
-      print_string("GOSUB stack overflow\n", VGA_LIGHT_RED);
+      print_string("gosub stack overflow\n", VGA_LIGHT_RED);
       return -1;
     }
     
@@ -524,14 +434,14 @@ else if (compare_string(command, "PRINT") == 0 ||
       current_line = target;
       return 1;
     } else {
-      print_string("GOSUB: Line not found\n", VGA_LIGHT_RED);
+      print_string("gosub: Line not found\n", VGA_LIGHT_RED);
       return -1;
     }
   }
   
-  else if (compare_string(command, "RETURN") == 0) {
+  else if (compare_string(command, "return") == 0) {
     if (gosub_stack_top < 0) {
-      print_string("RETURN without GOSUB\n", VGA_LIGHT_RED);
+      print_string("return without gosub\n", VGA_LIGHT_RED);
       return -1;
     }
     
@@ -546,31 +456,31 @@ else if (compare_string(command, "PRINT") == 0 ||
     return 0;
   }
   
-  else if (compare_string(command, "INPUT") == 0) {
-    if (*cmd >= 'A' && *cmd <= 'Z') {
+  else if (compare_string(command, "input") == 0) {
+    if (*cmd >= 'a' && *cmd <= 'z') {
       basic_input_number(*cmd);
     }
     return 0;
   }
   
-  else if (compare_string(command, "RANDOMIZE") == 0) {
+  else if (compare_string(command, "randomize") == 0) {
     basic_randomize();
     return 0;
   }
   
-  else if (compare_string(command, "GOTO") == 0) {
+  else if (compare_string(command, "goto") == 0) {
     int line_num = atoi(cmd);
     BasicLine* target = basic_find_line(line_num);
     if (target) {
       current_line = target;
       return 1;
     } else {
-      print_string("GOTO: Line not found\n", VGA_LIGHT_RED);
+      print_string("goto: Line not found\n", VGA_LIGHT_RED);
       return -1;
     }
   }
   
-  else if (compare_string(command, "END") == 0) {
+  else if (compare_string(command, "end") == 0) {
     return -1;
   }
   
@@ -585,7 +495,6 @@ else if (compare_string(command, "PRINT") == 0 ||
 
 void basic_run() {
   basic_clear_variables();
-  for_stack_top = -1;
   gosub_stack_top = -1;
   current_line = basic_lines;
   
