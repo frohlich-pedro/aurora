@@ -26,16 +26,23 @@ void basic_cleanup() {
 }
 
 void basic_clear_variables() {
-  for (int i = 0; i < MAX_VARS; i++) {
-    variables[i].value = 0;
-    variables[i].is_set = 0;
-  }
+  Variable* var = variables;
+  Variable* end = variables + MAX_VARS;
+clear_vars_loop:
+  if (var >= end) goto clear_vars_done;
+  var->value = 0;
+  var->is_set = 0;
+  var++;
+  goto clear_vars_loop;
+clear_vars_done:
+  return;
 }
 
 void basic_set_variable(char var, int value) {
   if (var >= 'a' && var <= 'z') {
-    variables[var - 'a'].value = value;
-    variables[var - 'a'].is_set = 1;
+    Variable* v = variables + (var - 'a');
+    v->value = value;
+    v->is_set = 1;
   }
 }
 
@@ -70,18 +77,28 @@ int basic_parse_number(const char** str) {
     s++;
   }
   
-  while (*s >= '0' && *s <= '9') {
-    result = result * 10 + (*s - '0');
-    s++;
-  }
+parse_digits:
+  if (*s < '0' || *s > '9') goto parse_done;
+  result = result * 10 + (*s - '0');
+  s++;
+  goto parse_digits;
   
+parse_done:
   *str = s;
   return result * sign;
 }
 
 char* basic_find_next_token(char* str) {
-  while (*str && *str != ' ' && *str != '\t') str++;
-  while (*str == ' ' || *str == '\t') str++;
+find_non_space:
+  if (*str == '\0' || (*str != ' ' && *str != '\t')) goto find_space;
+  str++;
+  goto find_non_space;
+  
+find_space:
+  if (*str == ' ' || *str == '\t') {
+    str++;
+    goto find_non_space;
+  }
   return str;
 }
 
@@ -93,81 +110,86 @@ int basic_evaluate_expression(const char* expr) {
   
   while (*s == ' ') s++;
   
-  while (*s) {
-    int value = 0;
-    
-    while (*s == ' ') s++;
-    if (*s == '\0') break;
-    
-    if (*s >= 'a' && *s <= 'z') {
-      value = basic_get_variable(*s);
-      s++;
-    }
-    else if (string_length(s) >= 4 && s[0] == 'r' && s[1] == 'n' && s[2] == 'd' && s[3] == '(') {
-      s += 4;
-      int max_val = basic_evaluate_expression(s);
-      while (*s && *s != ')') s++;
-      if (*s == ')') s++;
-      value = basic_random(max_val);
-    }
-    else if (string_length(s) >= 4 && s[0] == 'a' && s[1] == 'b' && s[2] == 's' && s[3] == '(') {
-      s += 4;
-      int abs_val = basic_evaluate_expression(s);
-      while (*s && *s != ')') s++;
-      if (*s == ')') s++;
-      value = (abs_val < 0) ? -abs_val : abs_val;
-    }
-    else if (*s == '(') {
-      s++;
-      value = basic_evaluate_expression(s);
-      while (*s && *s != ')') s++;
-      if (*s == ')') s++;
-    }
-    else if ((*s >= '0' && *s <= '9') || (*s == '-' && *(s+1) >= '0' && *(s+1) <= '9')) {
-      value = basic_parse_number(&s);
-    }
-    else {
-      s++;
-      continue;
-    }
-    
-    if (first_term) {
-      result = value;
-      first_term = 0;
-    } else {
-      switch (operator) {
-        case '+': result += value; break;
-        case '-': result -= value; break;
-        case '*': result *= value; break;
-        case '/': 
-          if (value != 0) {
-            result /= value;
-          } else {
-            print_string("Division by zero error\n", VGA_LIGHT_RED);
-            return 0;
-          }
-          break;
-      }
-    }
-    
-    while (*s == ' ') s++;
-    if (*s == '+' || *s == '-' || *s == '*' || *s == '/') {
-      operator = *s;
-      s++;
-    } else {
-      break;
+eval_loop:
+  if (*s == '\0') goto eval_done;
+  
+  int value = 0;
+  
+  while (*s == ' ') s++;
+  if (*s == '\0') goto eval_done;
+  
+  if (*s >= 'a' && *s <= 'z') {
+    value = basic_get_variable(*s);
+    s++;
+    goto eval_apply_op;
+  }
+  else if (string_length(s) >= 4 && s[0] == 'r' && s[1] == 'n' && s[2] == 'd' && s[3] == '(') {
+    s += 4;
+    int max_val = basic_evaluate_expression(s);
+    while (*s && *s != ')') s++;
+    if (*s == ')') s++;
+    value = basic_random(max_val);
+    goto eval_apply_op;
+  }
+  else if (string_length(s) >= 4 && s[0] == 'a' && s[1] == 'b' && s[2] == 's' && s[3] == '(') {
+    s += 4;
+    int abs_val = basic_evaluate_expression(s);
+    while (*s && *s != ')') s++;
+    if (*s == ')') s++;
+    value = (abs_val < 0) ? -abs_val : abs_val;
+    goto eval_apply_op;
+  }
+  else if (*s == '(') {
+    s++;
+    value = basic_evaluate_expression(s);
+    while (*s && *s != ')') s++;
+    if (*s == ')') s++;
+    goto eval_apply_op;
+  }
+  else if ((*s >= '0' && *s <= '9') || (*s == '-' && *(s+1) >= '0' && *(s+1) <= '9')) {
+    value = basic_parse_number(&s);
+    goto eval_apply_op;
+  }
+  else {
+    s++;
+    goto eval_loop;
+  }
+  
+eval_apply_op:
+  if (first_term) {
+    result = value;
+    first_term = 0;
+    goto eval_next_op;
+  } else {
+    switch (operator) {
+      case '+': result += value; break;
+      case '-': result -= value; break;
+      case '*': result *= value; break;
+      case '/': 
+        if (value != 0) {
+          result /= value;
+        } else {
+          print_string("Division by zero error\n", VGA_LIGHT_RED);
+          return 0;
+        }
+        break;
     }
   }
   
+eval_next_op:
+  while (*s == ' ') s++;
+  if (*s == '+' || *s == '-' || *s == '*' || *s == '/') {
+    operator = *s;
+    s++;
+    goto eval_loop;
+  }
+  
+eval_done:
   return result;
 }
 
 void basic_input_number(char var) {
   print_string("? ", VGA_LIGHT_CYAN);
-  
-  char input_buffer[16];
-  int buffer_pos = 0;
-  
   basic_set_variable(var, 42);
   print_string("42\n", VGA_WHITE);
 }
@@ -184,63 +206,76 @@ void basic_add_line(int line_num, const char* content) {
   if (basic_lines == NULL_POINTER || basic_lines->line_number > line_num) {
     new_line->next = basic_lines;
     basic_lines = new_line;
-  } else {
-    BasicLine* current = basic_lines;
-    while (current->next != NULL_POINTER && current->next->line_number < line_num) {
-      current = current->next;
-    }
+    return;
+  }
+  
+  BasicLine* current = basic_lines;
+insert_loop:
+  if (current->next == NULL_POINTER || current->next->line_number > line_num) {
     new_line->next = current->next;
     current->next = new_line;
+    return;
   }
+  current = current->next;
+  goto insert_loop;
 }
 
 void basic_remove_line(int line_num) {
   BasicLine* current = basic_lines;
   BasicLine* prev = NULL_POINTER;
   
-  while (current != NULL_POINTER && current->line_number != line_num) {
-    prev = current;
-    current = current->next;
-  }
+remove_loop:
+  if (current == NULL_POINTER) goto remove_done;
+  if (current->line_number == line_num) goto remove_found;
+  prev = current;
+  current = current->next;
+  goto remove_loop;
   
-  if (current != NULL_POINTER) {
-    if (prev == NULL_POINTER) {
-      basic_lines = current->next;
-    } else {
-      prev->next = current->next;
-    }
-    mem_free(current->content);
-    mem_free(current);
+remove_found:
+  if (prev == NULL_POINTER) {
+    basic_lines = current->next;
+  } else {
+    prev->next = current->next;
   }
+  mem_free(current->content);
+  mem_free(current);
+  
+remove_done:
+  return;
 }
 
 BasicLine* basic_find_line(int line_num) {
   BasicLine* current = basic_lines;
-  while (current != NULL_POINTER && current->line_number != line_num) {
-    current = current->next;
-  }
-  return current;
+find_loop:
+  if (current == NULL_POINTER) return NULL_POINTER;
+  if (current->line_number == line_num) return current;
+  current = current->next;
+  goto find_loop;
 }
 
 void basic_list() {
   BasicLine* current = basic_lines;
-  while (current != NULL_POINTER) {
-    print_int(current->line_number, VGA_LIGHT_GREEN);
-    print_string(" ", VGA_WHITE);
-    print_string(current->content, VGA_WHITE);
-    print_nl();
-    current = current->next;
-  }
+list_loop:
+  if (current == NULL_POINTER) return;
+  print_int(current->line_number, VGA_LIGHT_GREEN);
+  print_string(" ", VGA_WHITE);
+  print_string(current->content, VGA_WHITE);
+  print_nl();
+  current = current->next;
+  goto list_loop;
 }
 
 void basic_erase() {
   BasicLine* current = basic_lines;
-  while (current != NULL_POINTER) {
-    BasicLine* next = current->next;
-    mem_free(current->content);
-    mem_free(current);
-    current = next;
-  }
+erase_loop:
+  if (current == NULL_POINTER) goto erase_done;
+  BasicLine* next = current->next;
+  mem_free(current->content);
+  mem_free(current);
+  current = next;
+  goto erase_loop;
+  
+erase_done:
   basic_lines = NULL_POINTER;
   basic_clear_variables();
   gosub_stack_top = -1;
@@ -254,10 +289,13 @@ int basic_execute_line(BasicLine* line) {
   
   while (*cmd == ' ') cmd++;
   
-  while (*cmd && *cmd != ' ' && i < sizeof(command)-1) {
-    *(command + i++) = *cmd++;
-  }
-  *(command + i) = '\0';
+command_loop:
+  if (*cmd == '\0' || *cmd == ' ' || i >= sizeof(command)-1) goto command_done;
+  command[i++] = *cmd++;
+  goto command_loop;
+  
+command_done:
+  command[i] = '\0';
   
   while (*cmd == ' ') cmd++;
   
@@ -265,14 +303,14 @@ int basic_execute_line(BasicLine* line) {
     return 0;
   }
   
-else if (compare_string(command, "print") == 0 || 
-         compare_string(command, "println") == 0) {
-  
-  int suppress_newline = 0;
-  
-  while (*cmd) {
+  else if (compare_string(command, "print") == 0 || 
+           compare_string(command, "println") == 0) {
+    int suppress_newline = 0;
+    
+print_loop:
+    if (*cmd == '\0') goto print_done;
     while (*cmd == ' ') cmd++;
-    if (!*cmd) break;
+    if (*cmd == '\0') goto print_done;
     
     if (*cmd == '"') {
       cmd++;
@@ -289,9 +327,7 @@ else if (compare_string(command, "print") == 0 ||
       suppress_newline = 1;
       cmd++;
       while (*cmd == ' ') cmd++;
-      
-      if (!*cmd) break;
-      
+      if (*cmd == '\0') goto print_done;
       suppress_newline = 0;
     }
     else {
@@ -299,12 +335,14 @@ else if (compare_string(command, "print") == 0 ||
       char* expr_end = cmd;
       int paren_count = 0;
       
-      while (*expr_end && (*expr_end != ';' || paren_count > 0)) {
-        if (*expr_end == '(') paren_count++;
-        else if (*expr_end == ')') paren_count--;
-        expr_end++;
-      }
+expr_loop:
+      if (*expr_end == '\0' || (*expr_end == ';' && paren_count == 0)) goto expr_done;
+      if (*expr_end == '(') paren_count++;
+      else if (*expr_end == ')') paren_count--;
+      expr_end++;
+      goto expr_loop;
       
+expr_done:
       char saved_char = *expr_end;
       *expr_end = '\0';
       
@@ -314,13 +352,14 @@ else if (compare_string(command, "print") == 0 ||
       *expr_end = saved_char;
       cmd = expr_end;
     }
+    goto print_loop;
+    
+print_done:
+    if (!suppress_newline) {
+      print_nl();
+    }
+    return 0;
   }
-  
-  if (!suppress_newline) {
-    print_nl();
-  }
-  return 0;
-}
   else if (compare_string(command, "let") == 0) {
     if (*cmd >= 'a' && *cmd <= 'z') {
       char var = *cmd;
@@ -352,10 +391,13 @@ else if (compare_string(command, "print") == 0 ||
     char* left_start = cmd;
     char* comparison_pos = cmd;
     
-    while (*comparison_pos && *comparison_pos != '=' && *comparison_pos != '<' && *comparison_pos != '>') {
-      comparison_pos++;
-    }
+find_op_loop:
+    if (*comparison_pos == '\0' || *comparison_pos == '=' || 
+        *comparison_pos == '<' || *comparison_pos == '>') goto op_found;
+    comparison_pos++;
+    goto find_op_loop;
     
+op_found:
     if (*comparison_pos == '\0') {
       print_string("if: No comparison operator found\n", VGA_LIGHT_RED);
       return -1;
@@ -377,11 +419,14 @@ else if (compare_string(command, "print") == 0 ||
     char* right_start = comparison_pos;
     
     char* then_pos = right_start;
-    while (*then_pos && !(then_pos[0] == 't' && then_pos[1] == 'h' && 
-                          then_pos[2] == 'e' && then_pos[3] == 'n')) {
-      then_pos++;
-    }
+find_then_loop:
+    if (*then_pos == '\0' || 
+        (then_pos[0] == 't' && then_pos[1] == 'h' && 
+         then_pos[2] == 'e' && then_pos[3] == 'n')) goto then_found;
+    then_pos++;
+    goto find_then_loop;
     
+then_found:
     char right_expr[64];
     int right_len = then_pos - right_start;
     strncpy(right_expr, right_start, right_len);
@@ -498,18 +543,20 @@ void basic_run() {
   gosub_stack_top = -1;
   current_line = basic_lines;
   
-  while (current_line != NULL_POINTER) {
-    int result = basic_execute_line(current_line);
-    
-    if (result == -1) {
-      break;
-    } else if (result == 1) {
-      continue;
-    } else {
-      current_line = current_line->next;
-    }
+run_loop:
+  if (current_line == NULL_POINTER) goto run_done;
+  int result = basic_execute_line(current_line);
+  
+  if (result == -1) {
+    goto run_done;
+  } else if (result == 1) {
+    goto run_loop;
+  } else {
+    current_line = current_line->next;
+    goto run_loop;
   }
   
+run_done:
   print_string("Program ended\n", VGA_LIGHT_GREEN);
 }
 
