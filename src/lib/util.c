@@ -99,12 +99,11 @@ int compare_string_length(const char* s1, const char* s2, int len) {
 }
 
 void strcpy(char* dest, const char* src) {
-  do {
+  while (*src) {
     *dest++ = *src++;
-  } while (*src);
+  }
   *dest = '\0';
 }
-
 void strcat(char* dest, const char* src) {
   while (*dest) dest++;
   strcpy(dest, src);
