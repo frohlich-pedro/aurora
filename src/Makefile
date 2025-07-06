@@ -1,5 +1,5 @@
-C_SOURCES = $(wildcard init/*.c kernel/*.c)
-HEADERS = $(kernel/*.h)
+C_SOURCES = $(wildcard init/*.c kernel/*.c lib/*.c mm/*.c)
+HEADERS = $(kernel/*.h mm/*.h lib/*.h)
 OBJ_FILES = ${C_SOURCES:.c=.o kernel/interrupts.o}
 
 CC = gcc
@@ -27,7 +27,7 @@ debug: os-image.bin kernel.elf
 	i386-elf-gdb -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 %.o: %.c ${HEADERS}
-	$(CC) -g -m32 -ffreestanding -fno-pie -fno-stack-protector -c $< -o $@ # -g for debugging
+	$(CC) -g -m32 -ffreestanding -fno-pie -fno-stack-protector -c $< -o $@
 
 %.o: %.asm
 	nasm $< -f elf -o $@
@@ -43,3 +43,5 @@ clean:
 	$(RM) init/*.o
 	$(RM) boot/*.o boot/*.bin
 	$(RM) kernel/*.o
+	$(RM) lib/*.o
+	$(RM) mm/*.o
