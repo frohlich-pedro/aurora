@@ -1,5 +1,5 @@
-C_SOURCES = $(wildcard init/*.c kernel/*.c lib/*.c mm/*.c)
-HEADERS = $(kernel/*.h mm/*.h lib/*.h)
+C_SOURCES = $(wildcard init/*.c kernel/*.c lib/*.c mm/*.c lib/modules/*.c bin/*.c)
+HEADERS = $(kernel/*.h mm/*.h lib/*.h lib/modules/*.h bin/*.h)
 OBJ_FILES = ${C_SOURCES:.c=.o kernel/interrupts.o}
 
 CC = gcc
@@ -45,3 +45,5 @@ clean:
 	$(RM) kernel/*.o
 	$(RM) lib/*.o
 	$(RM) mm/*.o
+	$(RM) lib/modules/*.o
+	$(RM) bin/*.o
