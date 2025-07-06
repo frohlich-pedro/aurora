@@ -1,6 +1,6 @@
-C_SOURCES = $(wildcard init/*.c)
-HEADERS = $()
-OBJ_FILES = ${C_SOURCES:.c=.o}
+C_SOURCES = $(wildcard init/*.c kernel/*.c)
+HEADERS = $(kernel/*.h)
+OBJ_FILES = ${C_SOURCES:.c=.o kernel/interrupts.o}
 
 CC = gcc
 LD = ld
